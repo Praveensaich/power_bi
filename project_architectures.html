@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power BI Project Architectures - End-to-End Guide</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Power BI Project Architectures</h1>
+            <p>Designing Robust and Scalable Business Intelligence Solutions</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dax_fundamentals.html">DAX Fundamentals</a></li>
+                <li><a href="dax_functions.html">DAX Functions</a></li>
+                <li><a href="advanced_dax.html">Advanced DAX</a></li>
+                <li><a href="powerbi_lifecycle.html">Power BI Lifecycle</a></li>
+                <li><a href="project_architectures.html" class="active">Project Architectures</a></li>
+                <li><a href="updates_news.html">Updates & News</a></li>
+                <li><a href="resources.html">Resources</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container content-section">
+        <h2>Designing Your Power BI Solution</h2>
+        <p>A "project architecture" refers to the overall design and structure of your Power BI solution, encompassing data sources, data flow, model design, and deployment strategy. Choosing the right architecture is critical for performance, scalability, maintainability, and security.</p>
+
+        <section id="key-architectural-considerations">
+            <h3>Key Architectural Considerations:</h3>
+            <ul>
+                <li><strong>Data Volume & Velocity:</strong> How much data? How fast does it change? (Impacts Import vs. DirectQuery).</li>
+                <li><strong>Data Freshness Requirements:</strong> How quickly do users need to see new data? (Real-time vs. daily/hourly refresh).</li>
+                <li><strong>Data Source Complexity:</strong> Number and types of source systems.</li>
+                <li><strong>User Count & Concurrency:</strong> How many users will access reports simultaneously?</li>
+                <li><strong>Security & Compliance:</strong> Data access restrictions, RLS, data residency.</li>
+                <li><strong>Skill Sets:</strong> Availability of M, DAX, SQL, Azure engineers.</li>
+                <li><strong>Budget:</strong> Cloud services, premium capacities.</li>
+                <li><strong>Governance:</strong> How will the solution be managed and controlled?</li>
+            </ul>
+        </section>
+
+        <section id="architecture-pattern1-simple-import">
+            <h3>Architecture Pattern 1: Simple Import Model (Small to Medium Scale)</h3>
+            <img src="images/simple_import_architecture.png" alt="Simple Import Architecture Diagram" style="max-width:100%; height:auto; display:block; margin: 20px 0;">
+            <p><strong>Description:</strong> This is the most common starting point for many Power BI solutions. Data from various sources is imported directly into the Power BI Desktop model.</p>
+            <h4>Components:</h4>
+            <ul>
+                <li><strong>Data Sources:</strong> Excel files, CSVs, small databases (SQL Server, SharePoint lists).</li>
+                <li><strong>Power BI Desktop:</strong> Performs data transformation (Power Query), data modeling (relationships, DAX), and report creation.</li>
+                <li><strong>Power BI Service:</strong> Hosts the published report, dashboards, and schedules dataset refreshes (via On-premises Data Gateway if sources are on-prem).</li>
+            </ul>
+            <h4>Pros:</h4>
+            <ul>
+                <li><strong>Fast Performance:</strong> Data is in-memory in VertiPaq engine.</li>
+                <li><strong>Full DAX Capabilities:</strong> All DAX functions are available.</li>
+                <li><strong>Easy to Get Started:</strong> Low complexity.</li>
+            </ul>
+            <h4>Cons:</h4>
+            <ul>
+                <li><strong>Data Staleness:</strong> Data is only as fresh as the last refresh.</li>
+                <li><strong>Scalability Limits:</strong> Limited by Power BI Premium capacity for dataset size (up to 400 GB for P3, but practically smaller for single files) and refresh frequency.</li>
+                <li><strong>Data Duplication:</strong> Data is copied into the Power BI model.</li>
+            </ul>
+            <h4>Typical Use Case:</h4>
+            <p>Departmental reports, proof-of-concepts, analysis of static or infrequently updated datasets (e.g., monthly sales reports, small HR dashboards).</p>
+        </section>
+
+        <section id="architecture-pattern2-directquery">
+            <h3>Architecture Pattern 2: DirectQuery (Large Data, Real-time Needs)</h3>
+            <img src="images/directquery_architecture.png" alt="DirectQuery Architecture Diagram" style="max-width:100%; height:auto; display:block; margin: 20px 0;">
+            <p><strong>Description:</strong> No data is imported into Power BI. Power BI sends queries directly to the source database whenever a visual is interacted with or refreshed.</p>
+            <h4>Components:</h4>
+            <ul>
+                <li><strong>Data Sources:</strong> High-performing analytical databases (SQL Data Warehouse/Synapse, Azure SQL Database, Snowflake, Google BigQuery, SAP BW).</li>
+                <li><strong>Power BI Desktop:</strong> Connects in DirectQuery mode; still defines relationships and DAX measures (with some limitations).</li>
+                <li><strong>Power BI Service:</strong> Serves queries directly to the source via gateway (if on-prem).</li>
+            </ul>
+            <h4>Pros:</h4>
+            <ul>
+                <li><strong>Real-time Data:</strong> Always reflects the latest data in the source.</li>
+                <li><strong>Handles Large Datasets:</strong> No data size limits imposed by Power BI capacity (beyond source limits).</li>
+                <li><strong>Source Security:</strong> Leverages source database security.</li>
+            </ul>
+            <h4>Cons:</h4>
+            <ul>
+                <li><strong>Performance:</strong> Can be slower due to round-trips to the source. Complex queries might lead to poor user experience.</li>
+                <li><strong>DAX Limitations:</strong> Some DAX functions and Power Query transformations are not supported.</li>
+                <li><strong>Source Load:</strong> Can put significant load on the source database.</li>
+            </ul>
+            <h4>Typical Use Case:</h4>
+            <p>Operational dashboards, financial reporting on very large datasets where data freshness is paramount and source database is optimized for analytics (e.g., data warehouse).</p>
+        </section>
+
+        <section id="architecture-pattern3-composite-model">
+            <h3>Architecture Pattern 3: Composite Model (Hybrid Approach)</h3>
+            <img src="images/composite_model_architecture.png" alt="Composite Model Architecture Diagram" style="max-width:100%; height:auto; display:block; margin: 20px 0;">
+            <p><strong>Description:</strong> Combines Import and DirectQuery tables within a single Power BI model, offering the best of both worlds for specific scenarios.</p>
+            <h4>Components:</h4>
+            <ul>
+                <li><strong>Imported Tables:</strong> Smaller, static dimension tables (e.g., Dates, Products, Geography).</li>
+                <li><strong>DirectQuery Tables:</strong> Large, frequently updated fact tables (e.g., Sales Transactions, IoT sensor data).</li>
+                <li><strong>Power BI Desktop/Service:</strong> Manages queries to both in-memory and external sources.</li>
+            </ul>
+            <h4>Pros:</h4>
+            <ul>
+                <li><strong>Optimized Performance:</strong> Import tables provide fast lookups.</li>
+                <li><strong>Data Freshness:</strong> DirectQuery tables provide real-time data for critical facts.</li>
+                <li><strong>Flexibility:</strong> Design data models that best fit specific data needs.</li>
+            </ul>
+            <h4>Cons:</h4>
+            <ul>
+                <li><strong>Increased Complexity:</strong> More challenging to design and manage relationships between different modes.</li>
+                <li><strong>Some DAX/Query Limitations:</strong> Still subject to some DirectQuery limitations when mixing modes.</li>
+                <li><strong>Potential Ambiguity:</strong> Careful modeling required to avoid confusing query paths.</li>
+            </ul>
+            <h4>Typical Use Case:</h4>
+            <p>Scenarios where dimensions are relatively static but facts are massive and require real-time updates (e.g., retail analytics with daily sales transactions but stable product catalog).</p>
+        </section>
+
+        <section id="architecture-pattern4-dataflows">
+            <h3>Architecture Pattern 4: Leveraging Dataflows (ETL in the Cloud)</h3>
+            <img src="images/dataflow_architecture.png" alt="Dataflow Architecture Diagram" style="max-width:100%; height:auto; display:block; margin: 20px 0;">
+            <p><strong>Description:</strong> Dataflows are a cloud-based, self-service ETL tool within Power BI Service (or Power Apps). They allow you to centralize and reuse your Power Query transformations.</p>
+            <h4>Components:</h4>
+            <ul>
+                <li><strong>Data Sources:</strong> Various.</li>
+                <li><strong>Power BI Dataflow:</strong> Defines Power Query transformations in a cloud-based environment. Outputs data to Azure Data Lake Storage Gen2 (managed by Power BI).</li>
+                <li><strong>Power BI Desktop:</strong> Connects to the dataflow as a source, imports the prepared data.</li>
+                <li><strong>Power BI Service:</strong> Manages dataflow refresh schedules.</li>
+            </ul>
+            <h4>Pros:</h4>
+            <ul>
+                <li><strong>Reusability:</strong> Cleaned data can be used by multiple datasets and reports.</li>
+                <li><strong>Reduced Redundancy:</strong> Avoids duplicating ETL logic in every `.pbix` file.</li>
+                <li><strong>Decoupling ETL:</strong> Separates data preparation from report development.</li>
+                <li><strong>Scalability:</strong> Leverage Power BI Premium for large-scale dataflows.</li>
+            </ul>
+            <h4>Cons:</h4>
+            <ul>
+                <li><strong>Premium Requirement:</strong> Some advanced dataflow features require Power BI Premium.</li>
+                <li><strong>Learning Curve:</strong> Understanding dataflow concepts.</li>
+            </ul>
+            <h4>Typical Use Case:</h4>
+            <p>Centralizing data preparation for multiple reports, enabling self-service BI for business users on pre-cleaned data, large organizations with many Power BI developers.</p>
+        </section>
+
+        <section id="architecture-pattern5-enterprise-data-warehouse">
+            <h3>Architecture Pattern 5: Enterprise Data Warehouse/Lakehouse (Robust & Scalable)</h3>
+            <img src="images/data_warehouse_architecture.png" alt="Enterprise Data Warehouse Architecture Diagram" style="max-width:100%; height:auto; display:block; margin: 20px 0;">
+            <p><strong>Description:</strong> For large, complex enterprises, Power BI often sits on top of a well-structured data warehouse or a modern data lakehouse solution (e.g., Azure Synapse Analytics, Databricks).</p>
+            <h4>Components:</h4>
+            <ul>
+                <li><strong>Operational Data Sources:</strong> ERPs, CRMs, transactional databases.</li>
+                <li><strong>ETL/ELT Pipeline:</strong> Tools like Azure Data Factory, SSIS, Spark jobs to extract, transform, and load data into the warehouse/lakehouse.</li>
+                <li><strong>Data Warehouse/Lakehouse:</strong> Optimized for analytical queries (e.g., Azure Synapse, Databricks, Snowflake, Google BigQuery). Often uses a star/snowflake schema.</li>
+                <li><strong>Azure Analysis Services (AAS) / Power BI Premium Per User/Capacity Semantic Model:</strong> An optional intermediate layer to host highly optimized semantic models (using Tabular models). Provides extreme performance, scalability, and security for large models.</li>
+                <li><strong>Power BI Desktop/Service:</strong> Connects to the data warehouse/lakehouse (DirectQuery or Import) or to AAS/Premium semantic model (Live Connection).</li>
+            </ul>
+            <h4>Pros:</h4>
+            <ul>
+                <li><strong>Extreme Scalability & Performance:</strong> Built for large data volumes and complex analytics.</li>
+                <li><strong>Centralized Truth:</strong> Single source of truth for organizational data.</li>
+                <li><strong>Robust Security & Governance:</strong> Comprehensive security layers at each stage.</li>
+                <li><strong>Advanced Analytics:</strong> Can integrate with machine learning, data science tools.</li>
+            </ul>
+            <h4>Cons:</h4>
+            <ul>
+                <li><strong>High Cost:</strong> Significant investment in infrastructure and specialized personnel.</li>
+                <li><strong>Complex Implementation:</strong> Requires deep expertise in data engineering.</li>
+                <li><strong>Longer Development Cycles:</strong> Initial setup can be time-consuming.</li>
+            </ul>
+            <h4>Typical Use Case:</h4>
+            <p>Large enterprises with vast amounts of data, complex analytical needs, strict governance requirements, and existing data infrastructure investments. Ideal when Power BI is one of many BI tools accessing a central data platform.</p>
+        </section>
+
+        <h3>Choosing the Right Architecture</h3>
+        <p>The best architecture depends entirely on your specific business requirements, data characteristics, budget, and existing infrastructure. Often, organizations start simple and evolve their architecture as their needs grow and data complexity increases.</p>
+        <p>Consider the trade-offs between data freshness, performance, cost, and development complexity when making your decision.</p>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Power BI DAX & Project Architectures Guide. All rights reserved.</p>
+            <p>Disclaimer: This content is for educational purposes. Always refer to official Microsoft documentation for the latest information.</p>
+        </div>
+    </footer>
+</body>
+</html>
