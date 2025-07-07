@@ -207,6 +207,32 @@
             font-size: 1.4em;
         }
 
+        /* Interview Questions specific styling */
+        .interview-question {
+            background-color: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .interview-question h4 {
+            color: #34495e;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .interview-question p {
+            margin-bottom: 0.5em;
+        }
+
+        .interview-question strong {
+            color: #1abc9c;
+        }
+
+
         /* Footer Styles */
         footer {
             text-align: center;
@@ -296,7 +322,8 @@
                 <li><a href="#project-architectures">Project Architectures</a></li>
                 <li><a href="#updates-news">Updates & News</a></li>
                 <li><a href="#resources">Resources</a></li>
-            </ul>
+                <li><a href="#powerbi-jobs">Power BI Jobs</a></li>
+                <li><a href="#powerbi-interview">Interview Q&A</a></li> </ul>
         </div>
     </nav>
 
@@ -445,7 +472,7 @@
                 <article>
                     <h4>SUM()</h4>
                     <p><strong>Purpose:</strong> Adds all the numbers in a column.</p>
-                    <p><strong>Syntax:</strong> <code>SUM(&lt;column>)</code></p>
+                    <p><strong>Syntax:</strong> <code>SUM(<column>)</code></p>
                     <p><strong>Example:</strong> Calculating total revenue.</p>
                     <pre><code>Total Revenue = SUM(Sales[Revenue])</code></pre>
                     <p><strong>Explanation:</strong> This measure sums all the values in the 'Revenue' column of the 'Sales' table, respecting any applied filters. If filtered by 'Year = 2024', it sums 2024 revenues.</p>
@@ -454,7 +481,7 @@
                 <article>
                     <h4>AVERAGE()</h4>
                     <p><strong>Purpose:</strong> Calculates the arithmetic mean of the numbers in a column.</p>
-                    <p><strong>Syntax:</strong> <code>AVERAGE(&lt;column>)</code></p>
+                    <p><strong>Syntax:</strong> <code>AVERAGE(<column>)</code></p>
                     <p><strong>Example:</strong> Average unit price of products sold.</p>
                     <pre><code>Average Unit Price Sold = AVERAGE(Sales[UnitPrice])</code></pre>
                     <p><strong>Explanation:</strong> Returns the average value of 'UnitPrice' from the 'Sales' table. Useful for understanding typical selling prices.</p>
@@ -469,7 +496,7 @@
                             <li><code>COUNTROWS()</code>: Counts the number of rows in a table (or a table expression).</li>
                         </ul>
                     </p>
-                    <p><strong>Syntax:</strong> <code>COUNT(&lt;column>)</code>, <code>COUNTA(&lt;column>)</code>, <code>COUNTROWS(&lt;table>)</code></p>
+                    <p><strong>Syntax:</strong> <code>COUNT(<column>)</code>, <code>COUNTA(<column>)</code>, <code>COUNTROWS(<table>)</code></p>
                     <p><strong>Example (Count of Orders):</strong></p>
                     <pre><code>Number of Orders = COUNTROWS(Sales)</code></pre>
                     <p><strong>Explanation:</strong> Counts the total number of rows in the 'Sales' table, where each row represents an order line item. This is generally preferred over `COUNT` for counting occurrences.</p>
@@ -478,7 +505,7 @@
                 <article>
                     <h4>DISTINCTCOUNT()</h4>
                     <p><strong>Purpose:</strong> Counts the number of distinct (unique) values in a column.</p>
-                    <p><strong>Syntax:</strong> <code>DISTINCTCOUNT(&lt;column>)</code></p>
+                    <p><strong>Syntax:</strong> <code>DISTINCTCOUNT(<column>)</code></p>
                     <p><strong>Example:</strong> Counting the number of unique customers.</p>
                     <pre><code>Unique Customers = DISTINCTCOUNT(Customers[CustomerID])</code></pre>
                     <p><strong>Explanation:</strong> Essential for understanding customer base size, distinct products sold, etc.</p>
@@ -492,7 +519,7 @@
                 <article>
                     <h4>IF()</h4>
                     <p><strong>Purpose:</strong> Checks a condition, and returns one value when TRUE, and another when FALSE.</p>
-                    <p><strong>Syntax:</strong> <code>IF(&lt;logical_test>, &lt;value_if_true>, &lt;value_if_false>)</code></p>
+                    <p><strong>Syntax:</strong> <code>IF(<logical_test>, <value_if_true>, <value_if_false>)</code></p>
                     <p><strong>Example:</strong> Categorizing sales performance.</p>
                     <pre><code>Sales Performance = IF([Total Sales] > 500000, "High Performer", "Low Performer")</code></pre>
                     <p><strong>Explanation:</strong> This measure categorizes the total sales based on a threshold. It's evaluated in the current filter context.</p>
@@ -501,8 +528,8 @@
                 <article>
                     <h4>SWITCH()</h4>
                     <p><strong>Purpose:</strong> Evaluates an expression against a list of values and returns the result expression corresponding to the first matching value. More efficient than nested IFs.</p>
-                    <p><strong>Syntax:</strong> <code>SWITCH(&lt;expression>, &lt;value1>, &lt;result1>, [&lt;value2>, &lt;result2>...], [&lt;else_value>])</code><br>
-                    Or <code>SWITCH(TRUE(), &lt;condition1>, &lt;result1>, [&lt;condition2>, &lt;result2>...], [&lt;else_value>])</code> for multiple conditions.</p>
+                    <p><strong>Syntax:</strong> <code>SWITCH(<expression>, <value1>, <result1>, [<value2>, <result2>...], [<else_value>])</code><br>
+                    Or <code>SWITCH(TRUE(), <condition1>, <result1>, [<condition2>, <result2>...], [<else_value>])</code> for multiple conditions.</p>
                     <p><strong>Example:</strong> Product size classification.</p>
                     <pre><code>Product Size = SWITCH(TRUE(),
     Products[Weight] < 1, "Small",
@@ -520,7 +547,7 @@
                 <article>
                     <h4>FORMAT()</h4>
                     <p><strong>Purpose:</strong> Formats a value into a text string with the specified format. Useful for custom number/date formats.</p>
-                    <p><strong>Syntax:</strong> <code>FORMAT(&lt;value>, &lt;format_string>)</code></p>
+                    <p><strong>Syntax:</strong> <code>FORMAT(<value>, <format_string>)</code></p>
                     <p><strong>Example:</strong> Displaying sales as currency.</p>
                     <pre><code>Formatted Sales = FORMAT([Total Sales], "$#,##0.00")</code></pre>
                     <p><strong>Explanation:</strong> This converts the `[Total Sales]` measure into a text string formatted as a currency with two decimal places and comma separators.</p>
@@ -541,7 +568,7 @@
                 <article>
                     <h4>TOTALYTD(), TOTALMTD(), TOTALQTD()</h4>
                     <p><strong>Purpose:</strong> Calculate a year-to-date, month-to-date, or quarter-to-date total, respectively.</p>
-                    <p><strong>Syntax:</strong> <code>TOTALYTD(&lt;expression>, &lt;dates_column>[, &lt;filter>][, &lt;year_end_date>])</code></p>
+                    <p><strong>Syntax:</strong> <code>TOTALYTD(<expression>, <dates_column>[, <filter>][, <year_end_date>])</code></p>
                     <p><strong>Example:</strong> Year-to-Date Sales.</p>
                     <pre><code>Sales YTD = TOTALYTD([Total Sales], 'Date'[Date])</code></pre>
                     <p><strong>Explanation:</strong> Sums `[Total Sales]` from the beginning of the year up to the last visible date in the current filter context.</p>
@@ -550,7 +577,7 @@
                 <article>
                     <h4>SAMEPERIODLASTYEAR()</h4>
                     <p><strong>Purpose:</strong> Shifts the date context to the same period in the previous year.</p>
-                    <p><strong>Syntax:</strong> <code>SAMEPERIODLASTYEAR(&lt;dates_column>)</code></p>
+                    <p><strong>Syntax:</strong> <code>SAMEPERIODLASTYEAR(<dates_column>)</code></p>
                     <p><strong>Example:</strong> Sales for the same period last year.</p>
                     <pre><code>Sales LY = CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date]))</code></pre>
                     <p><strong>Explanation:</strong> Calculates `[Total Sales]` for the identical period of time (e.g., if filtered for Jan-Mar 2024, it calculates for Jan-Mar 2023).</p>
@@ -559,7 +586,7 @@
                 <article>
                     <h4>DATEADD()</h4>
                     <p><strong>Purpose:</strong> Returns a table that contains a column of dates, shifted forward or backward in time by the specified number of intervals.</p>
-                    <p><strong>Syntax:</strong> <code>DATEADD(&lt;dates>, &lt;number_of_intervals>, &lt;interval>)</code></p>
+                    <p><strong>Syntax:</strong> <code>DATEADD(<dates>, <number_of_intervals>, <interval>)</code></p>
                     <p><strong>Example:</strong> Sales from the previous month.</p>
                     <pre><code>Sales Previous Month = CALCULATE([Total Sales], DATEADD('Date'[Date], -1, MONTH))</code></pre>
                     <p><strong>Explanation:</strong> This measure shifts the filter context back by one month and calculates `[Total Sales]` for that shifted period.</p>
@@ -573,7 +600,7 @@
                 <article>
                     <h4>CALCULATE()</h4>
                     <p><strong>Purpose:</strong> Evaluates an expression in a context modified by filters. It's the most powerful and frequently used DAX function.</p>
-                    <p><strong>Syntax:</strong> <code>CALCULATE(&lt;expression>, &lt;filter1> [, &lt;filter2>...])</code></p>
+                    <p><strong>Syntax:</strong> <code>CALCULATE(<expression>, <filter1> [, <filter2>...])</code></p>
                     <p><strong>Example 1 (Adding a Filter):</strong> Calculate sales for a specific product category.</p>
                     <pre><code>Sales of Electronics = CALCULATE(
     [Total Sales],
@@ -593,13 +620,13 @@
     [Total Sales],
     KEEPFILTERS(Products[Category] = "Clothing") // If report is filtered by "Footwear", it will only show "Clothing" sales within "Footwear" which is 0. If no filter, it shows clothing.
 )</code></pre>
-                    <p><strong>Explanation:</strong> `KEEPFILTERS` interacts with existing filters by retaining them and adding the new filter. Without `KEEPFILTERS`, a new filter context from `CALCULATE` would replace conflicting filters.</p>
+                    <p><strong>Explanation:</strong> `KEEPFILTERS` interacts with existing filters by retaining them and adding the new filter. Without `KEEPFILTERS`, a new filter context from `CALCULATE` would replace conflicting conflicting filters.</p>
                 </article>
 
                 <article>
                     <h4>FILTER()</h4>
                     <p><strong>Purpose:</strong> Returns a table filtered by a boolean expression. Often used as a table argument within other functions (especially `CALCULATE` or iterator functions).</p>
-                    <p><strong>Syntax:</strong> <code>FILTER(&lt;table>, &lt;filter_expression>)</code></p>
+                    <p><strong>Syntax:</strong> <code>FILTER(<table>, <filter_expression>)</code></p>
                     <p><strong>Example:</strong> Sum of sales for high-value customers (customers with total sales > $1000).</p>
                     <pre><code>High Value Customer Sales =
 CALCULATE(
@@ -620,7 +647,7 @@ CALCULATE(
                 <article>
                     <h4>RELATED()</h4>
                     <p><strong>Purpose:</strong> Retrieves a value from a column in another table on the 'one' side of a one-to-many relationship, typically used in a calculated column.</p>
-                    <p><strong>Syntax:</strong> <code>RELATED(&lt;column>)</code></p>
+                    <p><strong>Syntax:</strong> <code>RELATED(<column>)</code></p>
                     <p><strong>Example (Calculated Column in Sales Table):</strong> Get the Product Category name into the Sales table.</p>
                     <pre><code>Product Category = RELATED('Product'[CategoryName])</code></pre>
                     <p><strong>Explanation:</strong> For each row in the 'Sales' table, this looks up the related 'Product' table based on the relationship and fetches the 'CategoryName' for that product. Requires an active relationship.</p>
@@ -629,7 +656,7 @@ CALCULATE(
                 <article>
                     <h4>RELATEDTABLE()</h4>
                     <p><strong>Purpose:</strong> Returns a table that contains all rows from the 'many' side of a relationship that are related to the current row on the 'one' side. Useful within iterator functions or `CALCULATE` to filter a related table.</p>
-                    <p><strong>Syntax:</strong> <code>RELATEDTABLE(&lt;table>)</code></p>
+                    <p><strong>Syntax:</strong> <code>RELATEDTABLE(<table>)</code></p>
                     <p><strong>Example (Calculated Column in Product Table):</strong> Count how many sales orders each product has.</p>
                     <pre><code>Number of Sales Orders = COUNTROWS(RELATEDTABLE(Sales))</code></pre>
                     <p><strong>Explanation:</strong> For each product in the 'Product' table, `RELATEDTABLE(Sales)` returns a table containing *only* the sales rows associated with that specific product. `COUNTROWS` then counts those related sales rows.</p>
@@ -638,7 +665,7 @@ CALCULATE(
                 <article>
                     <h4>USERELATIONSHIP()</h4>
                     <p><strong>Purpose:</strong> Specifies an inactive relationship to be used for a specific calculation. Useful when you have multiple relationships between two tables and need to activate a specific one for a measure.</p>
-                    <p><strong>Syntax:</strong> <code>USERELATIONSHIP(&lt;column1>, &lt;column2>)</code></p>
+                    <p><strong>Syntax:</strong> <code>USERELATIONSHIP(<column1>, <column2>)</code></p>
                     <p><strong>Example:</strong> Calculate Sales by Order Date and Sales by Ship Date (where only Order Date is active).</p>
                     <pre><code>Sales by Ship Date = CALCULATE(
     [Total Sales],
@@ -656,9 +683,9 @@ CALCULATE(
                     <h4>VAR (Variables)</h4>
                     <p><strong>Purpose:</strong> Defines variables to store the result of an expression. Variables improve readability, simplify complex formulas, and significantly boost performance by preventing redundant calculations.</p>
                     <p><strong>Syntax:</strong>
-                    <pre><code>VAR &lt;variable_name> = &lt;expression>
+                    <pre><code>VAR <variable_name> = <expression>
 RETURN
-    &lt;expression_using_variable(s)></code></pre>
+    <expression_using_variable(s)></code></pre>
                     <p><strong>Example:</strong> Calculate percentage of total sales for selected products.</p>
                     <pre><code>% Sales of Selected Products =
 VAR CurrentSales = [Total Sales]
@@ -672,7 +699,7 @@ RETURN
                 <article>
                     <h4>ADDCOLUMNS()</h4>
                     <p><strong>Purpose:</strong> Adds calculated columns to an existing or virtual table expression.</p>
-                    <p><strong>Syntax:</strong> <code>ADDCOLUMNS(&lt;table>, &lt;name1>, &lt;expression1> [, &lt;name2>, &lt;expression2>...])</code></p>
+                    <p><strong>Syntax:</strong> <code>ADDCOLUMNS(<table>, <name1>, <expression1> [, <name2>, <expression2>...])</code></p>
                     <p><strong>Example (Virtual Table for Top Customers):</strong></p>
                     <pre><code>Top 10 Customers by Sales =
 TOPN(
@@ -689,7 +716,7 @@ TOPN(
                 <article>
                     <h4>SUMMARIZE()</h4>
                     <p><strong>Purpose:</strong> Returns a summary table for the requested totals over a set of groups. Similar to GROUP BY in SQL.</p>
-                    <p><strong>Syntax:</strong> <code>SUMMARIZE(&lt;table>, &lt;groupBy_columnName1> [, &lt;groupBy_columnName2>...][, &lt;name1>, &lt;expression1>...])</code></p>
+                    <p><strong>Syntax:</strong> <code>SUMMARIZE(<table>, <groupBy_columnName1> [, <groupBy_columnName2>...][, <name1>, <expression1>...])</code></p>
                     <p><strong>Example (Sales by Category and Year):</strong></p>
                     <pre><code>Sales By Category & Year = SUMMARIZE(
     Sales,
@@ -793,7 +820,7 @@ TOPN(
                     <li><strong>Data Enrichment:</strong> Creating custom columns using Power Query's M language (e.g., conditional columns, date parts).</li>
                     <li><strong>Query Folding:</strong> Ensuring Power Query operations are translated back to the source system for faster processing (critical for large datasets).</li>
                 </ul>
-                <h4>Practical Steps in Power Query Editor:</h4>
+                <h4>Practical Steps in Power BI Editor:</h4>
                 <ol>
                     <li>After "Get Data", click "Transform Data" to open Power Query Editor.</li>
                     <li>Apply various transformations using the ribbon options or by writing custom M code in the Advanced Editor.</li>
@@ -858,7 +885,7 @@ in
                             <li>Consistent color palettes (use brand colors where applicable).</li>
                             <li>Effective use of white space.</li>
                             <li>Clear titles, labels, and legends.</li>
-                        </ul>
+                            </ul>
                     </li>
                     <li><strong>Interactivity:</strong>
                         <ul>
@@ -1229,11 +1256,443 @@ in
             </ul>
         </section>
 
+        ---
+
+        <section id="powerbi-jobs">
+            <h2>Power BI Job Roles & Career Opportunities</h2>
+            <p>Power BI is a powerful business intelligence tool, and jobs related to it are in high demand across various industries. Here's a breakdown of common Power BI job roles, their responsibilities, and relevant skills, along with some salary insights for India.</p>
+
+            <section id="job-roles-overview">
+                <h3>Common Power BI Job Titles</h3>
+                <p>Power BI professionals play a crucial role in transforming raw data into actionable insights that drive business decisions. The specific responsibilities can vary depending on the role and the organization's needs, but generally revolve around data analysis, visualization, and reporting.</p>
+            </section>
+
+            <section id="powerbi-developer-job">
+                <h3>1. Power BI Developer</h3>
+                <p><strong>Overview:</strong> A Power BI Developer is responsible for designing, developing, and deploying Business Intelligence (BI) solutions using Power BI. They focus on the technical aspects of creating data models, reports, and dashboards.</p>
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Developing and maintaining robust data models in Power BI Desktop.</li>
+                    <li>Connecting to various data sources (databases, spreadsheets, cloud services, APIs) and performing data extraction, transformation, and loading (ETL) using Power Query.</li>
+                    <li>Writing complex Data Analysis Expressions (DAX) to create calculated columns, measures, and tables for advanced analytics.</li>
+                    <li>Designing and creating interactive and visually appealing dashboards and reports that meet business requirements.</li>
+                    <li>Implementing Row-Level Security (RLS) and other data governance measures to ensure data accuracy and compliance.</li>
+                    <li>Publishing and scheduling reports to Power BI Service (SaaS).</li>
+                    <li>Optimizing Power BI reports and dashboards for performance.</li>
+                    <li>Collaborating with business stakeholders to understand data needs and translate them into technical specifications.</li>
+                    <li>Troubleshooting and resolving issues in Power BI reports and data refresh processes.</li>
+                    <li>Maintaining documentation for BI systems and processes.</li>
+                </ul>
+                <h4>Essential Skills:</h4>
+                <ul>
+                    <li><strong>Proficiency in Power BI:</strong> Power BI Desktop, Power BI Service, Power Query, Power Pivot.</li>
+                    <li><strong>Data Modeling:</strong> Strong understanding of dimensional modeling, star schemas, and snowflake schemas.</li>
+                    <li><strong>DAX:</strong> Expertise in writing complex DAX formulas.</li>
+                    <li><strong>SQL:</strong> Strong SQL querying skills for data manipulation and extraction.</li>
+                    <li><strong>Data Warehousing Concepts:</strong> Familiarity with ETL processes, data marts, and data lakes.</li>
+                    <li><strong>Data Visualization:</strong> Principles of effective data visualization and dashboard design.</li>
+                    <li><strong>Analytical Skills:</strong> Ability to analyze datasets, identify trends, and derive insights.</li>
+                    <li><strong>Communication Skills:</strong> Clear communication with technical and non-technical stakeholders.</li>
+                </ul>
+            </section>
+
+            <section id="powerbi-analyst-job">
+                <h3>2. Power BI Analyst / Business Intelligence Analyst</h3>
+                <p><strong>Overview:</strong> A Power BI Analyst focuses on interpreting data and translating it into actionable insights for business stakeholders. While they also build reports, their primary role is analysis and providing recommendations.</p>
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Collaborating with business stakeholders to gather and understand reporting and data needs.</li>
+                    <li>Analyzing complex datasets to uncover trends, patterns, and insights that support strategic initiatives.</li>
+                    <li>Developing and maintaining interactive dashboards and reports using Power BI to visualize key metrics and performance indicators (KPIs).</li>
+                    <li>Performing data validation and quality checks to ensure accuracy and reliability of data.</li>
+                    <li>Translating business requirements into technical specifications for reporting applications.</li>
+                    <li>Presenting findings in a clear and compelling way to non-technical audiences.</li>
+                    <li>Identifying opportunities for process improvement and implementing data-driven solutions.</li>
+                    <li>Maintaining awareness of industry best practices and emerging technologies in BI.</li>
+                </ul>
+                <h4>Essential Skills:</h4>
+                <ul>
+                    <li><strong>Power BI Proficiency:</strong> Strong hands-on experience with Power BI Desktop and Service.</li>
+                    <li><strong>Data Analysis:</strong> Proficiency in various data analysis techniques, including statistical analysis.</li>
+                    <li><strong>Data Transformation & Cleaning:</strong> Ability to clean, structure, and integrate data from various sources using Power Query Editor.</li>
+                    <li><strong>SQL:</strong> Knowledge of SQL for data extraction and manipulation.</li>
+                    <li><strong>Business Acumen:</strong> Strong understanding of business processes and ability to connect data insights to business objectives.</li>
+                    <li><strong>Communication & Presentation Skills:</strong> Excellent verbal and written communication, and ability to present complex information clearly.</li>
+                    <li><strong>Critical Thinking & Problem-Solving:</strong> Ability to identify data challenges and propose effective solutions.</li>
+                </ul>
+            </section>
+
+            <section id="powerbi-consultant-job">
+                <h3>3. Power BI Consultant</h3>
+                <p><strong>Overview:</strong> A Power BI Consultant works with clients to implement customized Power BI solutions. They typically have a broader strategic role, understanding business needs, designing BI architectures, and often providing training and support.</p>
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Engaging with clients to understand their business objectives, data requirements, and pain points.</li>
+                    <li>Designing and implementing end-to-end Power BI solutions, aligning with organizational goals and data governance standards.</li>
+                    <li>Connecting to and integrating various data sources, including databases, spreadsheets, and cloud services.</li>
+                    <li>Developing and optimizing data models, ETL processes, and reporting frameworks.</li>
+                    <li>Providing expert advice on Power BI best practices, tool selection, and platform architecture.</li>
+                    <li>Conducting training sessions and providing ongoing support to clients and team members.</li>
+                    <li>Ensuring data integrity, security, and compliance.</li>
+                    <li>Applying advanced analytics techniques to uncover deeper insights.</li>
+                    <li>Project management, including managing timelines and ensuring timely completion of tasks.</li>
+                </ul>
+                <h4>Essential Skills:</h4>
+                <ul>
+                    <li><strong>Deep Power BI Expertise:</strong> Comprehensive knowledge of all Power BI components and their advanced features.</li>
+                    <li><strong>Client Management & Communication:</strong> Excellent client-facing skills, ability to gather requirements, and present solutions.</li>
+                    <li><strong>Data Architecture:</strong> Strong understanding of data warehousing, data integration, and ETL processes.</li>
+                    <li><strong>Problem-Solving:</strong> Ability to analyze complex business problems and design effective BI solutions.</li>
+                    <li><strong>Strategic Thinking:</strong> Ability to define BI objectives and advise on data strategy.</li>
+                    <li><strong>Training & Mentoring:</strong> Ability to train and support users on Power BI.</li>
+                    <li><strong>Project Management:</strong> Experience in managing BI projects.</li>
+                </ul>
+            </section>
+
+            <section id="powerbi-architect-job">
+                <h3>4. Power BI Architect</h3>
+                <p><strong>Overview:</strong> A Power BI Architect is a senior-level role responsible for designing and overseeing the overall Business Intelligence architecture, with a strong focus on scalability, performance, and data governance for Power BI solutions.</p>
+                <h4>Key Responsibilities:</h4>
+                <ul>
+                    <li>Designing and implementing scalable and open BI architectures using Power BI and related Microsoft technologies (Azure Synapse Analytics, Azure Data Factory, SSAS, SSIS).</li>
+                    <li>Translating complex business needs into technical specifications and architectural designs for BI solutions.</li>
+                    <li>Developing and optimizing enterprise-level data models and data warehouses.</li>
+                    <li>Establishing best practices for data governance, quality, security, and compliance across all BI initiatives.</li>
+                    <li>Leading discussions on BI strategy, tool selection, and platform architecture.</li>
+                    <li>Collaborating with data engineers, data scientists, and other IT teams to ensure seamless data integration and flow.</li>
+                    <li>Optimizing the performance of Power BI systems, reports, and dashboards.</li>
+                    <li>Mentoring and leading BI development teams.</li>
+                    <li>Staying updated with the latest trends and technologies in the BI and data analytics field.</li>
+                </ul>
+                <h4>Essential Skills:</h4>
+                <ul>
+                    <li><strong>Extensive Power BI & Microsoft BI Stack Knowledge:</strong> Deep expertise in Power BI, SSAS, SSRS, SSIS, Azure Data Factory, Azure Synapse Analytics, etc.</li>
+                    <li><strong>Data Architecture & Modeling:</strong> Expert-level knowledge of data warehousing, dimensional modeling, and database design.</li>
+                    <li><strong>SQL & Database Management:</strong> Advanced SQL skills and experience with relational and non-relational databases.</li>
+                    <li><strong>ETL Processes:</strong> Strong understanding and experience with ETL tools and methodologies.</li>
+                    <li><strong>Cloud Platforms:</strong> Familiarity with cloud platforms like Microsoft Azure for BI solutions.</li>
+                    <li><strong>Leadership & Mentoring:</strong> Ability to lead teams and drive BI initiatives.</li>
+                    <li><strong>Strategic Vision:</strong> Ability to define and implement a long-term BI strategy.</li>
+                    <li><strong>Performance Optimization:</strong> Expertise in performance tuning and optimization of BI solutions.</li>
+                </ul>
+            </section>
+
+            <section id="powerbi-salaries">
+                <h3>Power BI Salaries in India (Approximate)</h3>
+                <p>Salaries for Power BI professionals in India can vary significantly based on experience, location (e.g., Bangalore, Mumbai, Hyderabad often pay more), company size, and specific skills.</p>
+                <p>Here's an approximate salary range (annual, in INR) based on experience level:</p>
+                <ul>
+                    <li><strong>Entry-level (0-2 years experience):</strong> ₹3,00,000 - ₹6,00,000</li>
+                    <li><strong>Mid-level (3-5 years experience):</strong> ₹6,00,000 - ₹12,00,000</li>
+                    <li><strong>Senior-level (6+ years experience):</strong> ₹12,00,000 - ₹20,00,000+</li>
+                    <li><strong>Team Lead / Manager (8+ years experience):</strong> ₹18,00,000 - ₹30,00,000+</li>
+                </ul>
+                <h4>Average Salaries by Designation (approximate):</h4>
+                <ul>
+                    <li><strong>Power BI Analyst:</strong> ₹4,50,000 - ₹5,00,000</li>
+                    <li><strong>Power BI Developer:</strong> ₹4,50,000 - ₹8,00,000</li>
+                    <li><strong>Power BI Consultant:</strong> ₹6,00,000+</li>
+                    <li><strong>Power BI Architect:</strong> ₹15,00,000+</li>
+                </ul>
+                <h4>Factors Influencing Salary:</h4>
+                <ul>
+                    <li><strong>Experience Level:</strong> This is the most significant factor.</li>
+                    <li><strong>Location:</strong> Major metropolitan cities generally offer higher salaries.</li>
+                    <li><strong>Company Size and Type:</strong> MNCs and well-funded startups often pay more than smaller companies.</li>
+                    <li><strong>Additional Skills:</strong> Proficiency in other tools like SQL Server Reporting Services (SSRS), SQL Server Integration Services (SSIS), Azure services, Python, R, and strong data governance knowledge can lead to higher compensation.</li>
+                    <li><strong>Industry:</strong> Certain industries like IT services, finance, and e-commerce may offer higher pay due to their data-intensive nature.</li>
+                </ul>
+                <p>The demand for Power BI professionals is projected to continue growing as more companies embrace data-driven decision-making.</p>
+            </section>
+        </section>
+
+        ---
+
+        <section id="powerbi-interview">
+            <h2>Power BI Interview Questions & Answers</h2>
+            <p>Prepare for your Power BI interviews with these common questions covering various aspects of the tool and its ecosystem.</p>
+
+            <section id="general-powerbi-questions">
+                <h3>General Power BI Questions</h3>
+
+                <article class="interview-question">
+                    <h4>1. What is Power BI and why is it used?</h4>
+                    <p><strong>Answer:</strong> Power BI is a business intelligence tool by Microsoft that helps in visualizing and analyzing data from various sources. It's used to create interactive dashboards and reports, enabling users to gain insights, monitor performance, and make data-driven decisions effectively.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>2. What are the key components of Power BI?</h4>
+                    <p><strong>Answer:</strong> The key components are:
+                        <ul>
+                            <li><strong>Power BI Desktop:</strong> A free desktop application for data connection, transformation, modeling, and report creation.</li>
+                            <li><strong>Power BI Service (SaaS):</strong> A cloud-based service for publishing, sharing, and collaborating on reports and dashboards.</li>
+                            <li><strong>Power BI Mobile Apps:</strong> For viewing reports and dashboards on mobile devices.</li>
+                            <li><strong>Power BI Report Server:</strong> An on-premises solution for publishing reports.</li>
+                            <li><strong>Power BI Gateway:</strong> Connects Power BI Service to on-premises data sources for scheduled refreshes.</li>
+                        </ul>
+                    </p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>3. Explain the difference between Power BI Desktop, Service, and Mobile.</h4>
+                    <p><strong>Answer:</strong>
+                        <ul>
+                            <li><strong>Desktop:</strong> Where you build your reports (data import, transformation, modeling, DAX, visualizations). It's the development environment.</li>
+                            <li><strong>Service:</strong> Where you publish your reports from Desktop. It's for sharing, collaboration, creating dashboards, and setting up data refreshes. It's the consumption and administration environment.</li>
+                            <li><strong>Mobile:</strong> Allows users to view and interact with reports and dashboards published to the Power BI Service on their mobile devices.</li>
+                        </ul>
+                    </p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>4. What is a Dashboard in Power BI? Can you create a dashboard in Power BI Desktop?</h4>
+                    <p><strong>Answer:</strong> A Power BI Dashboard is a single-page canvas (often called a "canvas" or "report page") that tells a story through visualizations. It's a curated view, often combining visuals from multiple reports. You **cannot** create a dashboard directly in Power BI Desktop; dashboards are a feature of the Power BI Service.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>5. What are Workspaces in Power BI Service?</h4>
+                    <p><strong>Answer:</strong> Workspaces are collaborative environments in the Power BI Service where teams can store, organize, and share Power BI content (datasets, reports, dashboards, dataflows). They facilitate collaboration among developers and content creators before publishing to broader audiences via Power BI Apps.</p>
+                </article>
+            </section>
+
+            <section id="data-modeling-questions">
+                <h3>Data Modeling Questions</h3>
+
+                <article class="interview-question">
+                    <h4>1. What is a Star Schema and why is it preferred in Power BI?</h4>
+                    <p><strong>Answer:</strong> A Star Schema is a data modeling approach where a central "fact" table (containing measures/metrics) is connected to multiple "dimension" tables (containing descriptive attributes). It's preferred in Power BI because it simplifies data relationships, improves query performance (especially for DAX), and makes reports easier to understand and build.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>2. Explain Fact and Dimension tables. Give examples.</h4>
+                    <p><strong>Answer:</strong>
+                        <ul>
+                            <li><strong>Fact Table:</strong> Contains quantitative data (measures) and foreign keys to dimension tables. It records events or transactions.
+                                <em>Example:</em> A `Sales` table with columns like `SalesAmount`, `Quantity`, `OrderID`, `ProductID`, `CustomerID`, `DateID`.</li>
+                            <li><strong>Dimension Table:</strong> Contains descriptive attributes related to the facts. They provide context to the measures.
+                                <em>Example:</em> A `Product` table with `ProductID`, `ProductName`, `Category`, `Brand`. A `Customer` table with `CustomerID`, `CustomerName`, `City`, `Region`. A `Date` table with `DateID`, `Year`, `Month`, `Day`.</li>
+                        </ul>
+                    </p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>3. What is cardinality in Power BI relationships? Name the types.</h4>
+                    <p><strong>Answer:</strong> Cardinality defines the number of unique values in one column relative to another in a relationship. It describes how rows in one table relate to rows in another.
+                        Types:
+                        <ul>
+                            <li><strong>One-to-Many (1:*) - Most Common:</strong> One record in the primary table relates to many records in the related table (e.g., one customer has many sales).</li>
+                            <li><strong>Many-to-One (*:1):</strong> The inverse of one-to-many (e.g., many sales records belong to one customer).</li>
+                            <li><strong>One-to-One (1:1):</strong> One record in the primary table relates to exactly one record in the related table (rare in BI, often means tables can be merged).</li>
+                            <li><strong>Many-to-Many (*:*):</strong> Many records in one table relate to many records in another (requires a bridging/junction table in Power BI).</li>
+                        </ul>
+                    </p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>4. What is a bridging table (or junction table) and when do you use it?</h4>
+                    <p><strong>Answer:</strong> A bridging table is an intermediate table used to resolve a many-to-many relationship between two tables in Power BI. It typically contains foreign keys from both tables involved in the many-to-many relationship. You use it when a direct relationship would result in incorrect aggregations or filtering due to ambiguity.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>5. How do you handle inactive relationships in Power BI?</h4>
+                    <p><strong>Answer:</strong> Inactive relationships are typically used when there are multiple ways to relate two tables (e.g., an Order Date and a Ship Date between a Sales table and a Date table). You activate an inactive relationship for a specific calculation using the `USERELATIONSHIP` DAX function within a `CALCULATE` statement.</p>
+                </article>
+            </section>
+
+            <section id="power-query-questions">
+                <h3>Power Query (ETL) Questions</h3>
+
+                <article class="interview-question">
+                    <h4>1. What is Power Query and what is its purpose?</h4>
+                    <p><strong>Answer:</strong> Power Query is an ETL (Extract, Transform, Load) tool within Power BI (and Excel) that allows users to connect to various data sources, clean and transform data, and load it into the data model. Its purpose is to prepare raw data into a clean, structured, and optimized format suitable for analysis and reporting.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>2. Explain "Query Folding" in Power Query. Why is it important?</h4>
+                    <p><strong>Answer:</strong> Query Folding is the ability of Power Query to translate transformation steps back into the native query language of the data source (e.g., SQL for a SQL database). This allows the data source to perform the heavy lifting of data transformation, sending only the final, processed data to Power BI. It's crucial for performance, especially with large datasets, as it reduces data transfer and leverages the source system's processing power.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>3. What is the M language?</h4>
+                    <p><strong>Answer:</strong> M is the functional programming language behind Power Query. Every transformation step you apply in the Power Query Editor (like removing columns, changing data types, merging queries) generates M code. You can view and edit this code in the Advanced Editor.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>4. When would you use "Merge Queries" vs. "Append Queries"?</h4>
+                    <p><strong>Answer:</strong>
+                        <ul>
+                            <li><strong>Merge Queries:</strong> Used to combine columns from two or more tables based on matching values in one or more common columns (similar to SQL JOIN operations). You use it when you want to add more descriptive attributes to your fact table from dimension tables.</li>
+                            <li><strong>Append Queries:</strong> Used to combine rows from two or more tables into a single new table (similar to SQL UNION ALL). You use it when tables have the same structure but contain data for different periods or segments (e.g., Sales data from Jan, Feb, March files).</li>
+                        </ul>
+                    </p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>5. How do you handle errors in Power Query?</h4>
+                    <p><strong>Answer:</strong> Power Query provides several options to handle errors:
+                        <ul>
+                            <li><strong>Remove Errors:</strong> Deletes rows containing errors.</li>
+                            <li><strong>Replace Errors:</strong> Replaces error values with a specified value (e.g., null, 0, or text).</li>
+                            <li><strong>Keep Errors:</strong> Retains rows with errors (useful for inspection).</li>
+                            <li><strong>Add Column By Example / Conditional Column:</strong> Can be used to proactively check for potential errors before they occur.</li>
+                            <li>Using `try ... otherwise` in M code for more granular error handling.</li>
+                        </ul>
+                    </p>
+                </article>
+            </section>
+
+            <section id="dax-questions">
+                <h3>DAX (Data Analysis Expressions) Questions</h3>
+
+                <article class="interview-question">
+                    <h4>1. What is DAX and what are its main components?</h4>
+                    <p><strong>Answer:</strong> DAX (Data Analysis Expressions) is a formula language used in Power BI, SSAS Tabular, and Excel Power Pivot to create custom calculations. Its main components are:
+                        <ul>
+                            <li><strong>Measures:</strong> Dynamic calculations aggregated on the fly (e.g., Total Sales, Average Profit).</li>
+                            <li><strong>Calculated Columns:</strong> New columns added to a table, calculated row-by-row and stored in the model (e.g., Full Name, Age Group).</li>
+                            <li><strong>Calculated Tables:</strong> New tables created using DAX expressions (e.g., a Date table, a summary table).</li>
+                        </ul>
+                    </p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>2. Explain Row Context and Filter Context in DAX.</h4>
+                    <p><strong>Answer:</strong>
+                        <ul>
+                            <li><strong>Row Context:</strong> The "current row" being evaluated. It's implicit in calculated columns (each row is evaluated individually) and explicitly created by iterator functions (functions ending in 'X' like `SUMX`, `AVERAGEX`) that loop through a table row by row.</li>
+                            <li><strong>Filter Context:</strong> The set of filters applied to the data model at a given point in time. These filters come from visuals, slicers, report-level filters, or relationships, and determine which data subset is being considered for a calculation.</li>
+                        </ul>
+                    </p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>3. What is Context Transition? Give an example.</h4>
+                    <p><strong>Answer:</strong> Context Transition is the process where a row context is converted into an equivalent filter context. This happens implicitly when a measure (which normally evaluates in filter context) is called from within a row context (e.g., in a calculated column or inside an iterator function).
+                        <em>Example:</em> If you create a calculated column `Sales Per Customer = [Total Sales]` in your `Customer` table, for each customer row, the row context of that customer is converted into a filter context for that specific customer, and then `[Total Sales]` is calculated for that filtered customer.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>4. What is the purpose of the `CALCULATE` function?</h4>
+                    <p><strong>Answer:</strong> `CALCULATE` is the most powerful and versatile DAX function. Its primary purpose is to evaluate an expression (usually a measure) under a modified filter context. It can add new filters, remove existing filters (`ALL`, `ALLEXCEPT`), or modify existing filters (`KEEPFILTERS`). It's essential for almost all advanced DAX calculations.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>5. When would you use `ALL` vs. `ALLEXCEPT` vs. `ALLSELECTED`?</h4>
+                    <p><strong>Answer:</strong> These are filter modifier functions used within `CALCULATE`:
+                        <ul>
+                            <li><strong>`ALL(<table>)` or `ALL(<column>)`:</strong> Removes all filters from the specified table or column. Useful for calculating percentages of a grand total.</li>
+                            <li><strong>`ALLEXCEPT(<table>, <column1>, <column2>...)`:</strong> Removes all filters from the specified table *except* for the filters on the specified columns. Useful for keeping certain filters while removing others.</li>
+                            <li><strong>`ALLSELECTED()`:</strong> Removes filters that are *not* from slicers or report filters, but keeps filters from slicers/report filters. It's useful for calculating percentages of a subtotal based on current visual selection.</li>
+                        </ul>
+                    </p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>6. How do you create a Date table in Power BI and why is it important?</h4>
+                    <p><strong>Answer:</strong> A Date table is a dimension table containing a continuous range of dates and associated attributes (Year, Month, Quarter, Day of Week, etc.). You can create it using DAX (`CALENDAR` or `CALENDARAUTO`) or in Power Query. It's crucial for:
+                        <ul>
+                            <li>Implementing time intelligence functions (YTD, MoM, YoY) accurately.</li>
+                            <li>Consistent date filtering and slicing across all reports.</li>
+                            <li>Creating custom date hierarchies.</li>
+                        </ul>
+                        You must mark it as a Date table in the Model view.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>7. What are DAX variables (`VAR`) and why are they useful?</h4>
+                    <p><strong>Answer:</strong> DAX variables (`VAR`) allow you to store the result of an expression within a DAX formula. They are useful because:
+                        <ul>
+                            <li><strong>Readability:</strong> Break down complex formulas into smaller, manageable parts.</li>
+                            <li><strong>Performance:</strong> The expression assigned to a variable is calculated only once, even if the variable is referenced multiple times, preventing redundant calculations.</li>
+                            <li><strong>Debugging:</strong> Easier to debug by inspecting intermediate results.</li>
+                        </ul>
+                    </p>
+                </article>
+            </section>
+
+            <section id="performance-security-questions">
+                <h3>Performance & Security Questions</h3>
+
+                <article class="interview-question">
+                    <h4>1. How do you optimize Power BI report performance?</h4>
+                    <p><strong>Answer:</strong>
+                        <ul>
+                            <li><strong>Optimize Data Model:</strong> Use Star Schema, remove unnecessary columns/rows in Power Query, hide columns not used in visuals, optimize data types.</li>
+                            <li><strong>Optimize DAX:</strong> Use measures over calculated columns for aggregations, avoid bidirectional relationships, use variables, optimize iterator functions.</li>
+                            <li><strong>Optimize Visuals:</strong> Limit the number of visuals per page, use efficient visuals, avoid complex calculations directly in visuals.</li>
+                            <li><strong>Query Folding:</strong> Ensure Power Query steps are folded back to the source.</li>
+                            <li><strong>Power BI Premium/Capacity:</strong> For larger datasets and higher refresh frequencies.</li>
+                            <li><strong>Utilize DAX Studio:</strong> For query analysis and performance tuning.</li>
+                        </ul>
+                    </p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>2. Explain Row-Level Security (RLS) in Power BI.</h4>
+                    <p><strong>Answer:</strong> Row-Level Security (RLS) is a feature in Power BI that restricts data access for specified users. You define roles and DAX rules within Power BI Desktop, and when users view reports in the Power BI Service, they only see the data allowed by their assigned role. This ensures data privacy and compliance without creating separate reports for each user/group.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>3. What is an On-premises Data Gateway and why is it needed?</h4>
+                    <p><strong>Answer:</strong> An On-premises Data Gateway acts as a bridge, securely connecting Power BI Service (and other Microsoft cloud services) to data sources located on your organization's private network (e.g., SQL Server databases, SharePoint lists, Excel files on a network drive). It's needed to enable scheduled data refreshes and DirectQuery connections for on-premises data without moving the data to the cloud.</p>
+                </article>
+            </section>
+
+            <section id="scenario-based-questions">
+                <h3>Scenario-Based Questions</h3>
+
+                <article class="interview-question">
+                    <h4>1. You have sales data and want to calculate the Year-to-Date (YTD) sales. How would you do this using DAX?</h4>
+                    <p><strong>Answer:</strong> I would create a measure using the `TOTALYTD` function.
+                        <pre><code>Sales YTD = TOTALYTD(SUM(Sales[SalesAmount]), 'Date'[Date])</code></pre>
+                        This requires a marked Date table with a continuous date column.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>2. How would you show the sales percentage of total sales for each product category?</h4>
+                    <p><strong>Answer:</strong> I would create two measures: one for `Total Sales` (e.g., `SUM(Sales[SalesAmount])`) and another for `Total Sales All Categories` using `ALL` to remove category filters. Then, divide the first by the second.
+                        <pre><code>Total Sales = SUM(Sales[SalesAmount])
+Total Sales All Categories = CALCULATE([Total Sales], ALL(Product[Category]))
+% Sales of Category = DIVIDE([Total Sales], [Total Sales All Categories])</code></pre>
+                        Then, format `% Sales of Category` as a percentage.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>3. You have two tables: 'Employees' (EmployeeID, Name, Department) and 'Sales' (SalesID, EmployeeID, SalesAmount). How would you find the total sales for each department?</h4>
+                    <p><strong>Answer:</strong> Assuming a one-to-many relationship from 'Employees' (one side) to 'Sales' (many side) on `EmployeeID`:
+                        1. Ensure the relationship is active.
+                        2. Create a measure for `Total Sales` in the 'Sales' table: `Total Sales = SUM(Sales[SalesAmount])`.
+                        3. Drag the `Department` column from the 'Employees' table and the `Total Sales` measure into a table or matrix visual. Power BI will automatically filter `Total Sales` by department due to the relationship.</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>4. Describe a time you faced a data quality issue in Power BI and how you resolved it.</h4>
+                    <p><strong>Answer:</strong> (Provide a specific example from your experience)
+                        <em>Example:</em> "In a recent project, I encountered inconsistent date formats in a CSV file, leading to errors during data loading. Some dates were 'DD-MM-YYYY', others 'MM/DD/YYYY'. I resolved this in Power Query Editor by first detecting the column's data type as text, then using the 'Transform' -> 'Date' -> 'Parse' option, or by writing custom M code using `Date.FromText` with specific culture settings to handle the variations, ensuring all dates were uniformly converted to a proper date data type."</p>
+                </article>
+
+                <article class="interview-question">
+                    <h4>5. How do you ensure data security in Power BI?</h4>
+                    <p><strong>Answer:</strong>
+                        <ul>
+                            <li><strong>Row-Level Security (RLS):</strong> Implement DAX rules to filter data based on user roles.</li>
+                            <li><strong>Workspace Permissions:</strong> Assign appropriate roles (Viewer, Contributor, Member, Admin) in Power BI Service workspaces.</li>
+                            <li><strong>App Permissions:</strong> Control who can access Power BI Apps and their content.</li>
+                            <li><strong>Data Gateway Security:</strong> Secure gateway installations and manage data source credentials.</li>
+                            <li><strong>Data Source Security:</strong> Ensure underlying data sources have proper access controls.</li>
+                            <li><strong>Sensitivity Labels:</strong> Apply Microsoft Information Protection sensitivity labels to datasets and reports.</li>
+                            <li><strong>Audit Logs:</strong> Monitor user activities and data access in the Power BI Service.</li>
+                        </ul>
+                    </p>
+                </article>
+            </section>
+        </section>
+
     </div>
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 Power BI DAX & Project Architectures Guide. All rights reserved.</p>
+            <p>© 2025 Power BI DAX & Project Architectures Guide. All rights reserved.</p>
             <p>Disclaimer: This content is for educational purposes. Always refer to official Microsoft documentation for the latest information.</p>
         </div>
     </footer>
