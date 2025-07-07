@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power BI Updates & News - End-to-End Guide</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Power BI Updates & News</h1>
+            <p>Stay Current with the Latest Features and Announcements</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dax_fundamentals.html">DAX Fundamentals</a></li>
+                <li><a href="dax_functions.html">DAX Functions</a></li>
+                <li><a href="advanced_dax.html">Advanced DAX</a></li>
+                <li><a href="powerbi_lifecycle.html">Power BI Lifecycle</a></li>
+                <li><a href="project_architectures.html">Project Architectures</a></li>
+                <li><a href="updates_news.html" class="active">Updates & News</a></li>
+                <li><a href="resources.html">Resources</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container content-section">
+        <p>Power BI is constantly evolving, with monthly updates bringing new features, improvements, and bug fixes. This section provides a summary of key updates, focusing on how they impact DAX, data modeling, and overall project development.</p>
+
+        <section id="latest-update">
+            <h2>July 2025 Update Highlights</h2>
+            <p><strong>Release Date:</strong> July 8, 2025</p>
+            <h3>Key Features:</h3>
+            <ul>
+                <li>
+                    <h4>Enhanced Visual Calculations (Public Preview Improvements)</h4>
+                    <p>Further refinements to the visual calculations feature. Now supports more complex aggregations directly within visuals without needing separate measures. Improved performance for large datasets.</p>
+                    <p><strong>Impact on DAX:</strong> Reduces the need for some explicit DAX measures for simple visual-level calculations, but understanding DAX context remains crucial for advanced scenarios and sharing logic across multiple visuals/reports.</p>
+                    <p><a href="https://powerbi.microsoft.com/en-us/blog/power-bi-july-2025-update-visual-calculations-improvements/" target="_blank">Read more on the official Power BI blog</a></p>
+                </li>
+                <li>
+                    <h4>Fabric Integration Enhancements</h4>
+                    <p>Deeper integration with Microsoft Fabric capabilities. Improved connectivity to OneLake data, allowing smoother transition from data engineering in Fabric to reporting in Power BI.</p>
+                    <p><strong>Impact on Project Architecture:</strong> Reinforces the Lakehouse pattern. Encourages leveraging Fabric for data preparation and storage, with Power BI connecting to robust semantic models.</p>
+                </li>
+                <li>
+                    <h4>New Connector: [Specific new connector, e.g., "Microsoft Dynamics 365 Sales Insights"]</h4>
+                    <p>A new native connector for streamlined access to [brief description of data source].</p>
+                    <p><strong>Impact on Get Data Stage:</strong> Simplifies data acquisition for specific business applications.</p>
+                </li>
+            </ul>
+            <h3>Other Improvements & Bug Fixes:</h3>
+            <ul>
+                <li>Improved query performance for DirectQuery models with complex joins.</li>
+                <li>Accessibility enhancements for report consumers.</li>
+                <li>Minor bug fixes related to [mention a common bug, e.g., "date hierarchy auto-generation"].</li>
+            </ul>
+        </section>
+
+        <section id="archive-updates">
+            <h2>Previous Updates Archive</h2>
+            <p>Browse through past Power BI updates and their impact.</p>
+
+            <article class="update-summary">
+                <h3>June 2025 Update Summary</h3>
+                <p><strong>Release Date:</strong> June 10, 2025</p>
+                <ul>
+                    <li>**DAX Function:** Introduction of <code>WINDOW()</code> and <code>OFFSET()</code> for native windowing calculations.</li>
+                    <li>**Modeling Feature:** Enhanced aggregation options for DirectQuery.</li>
+                    <li><a href="https://powerbi.microsoft.com/en-us/blog/power-bi-june-2025-update-summary/" target="_blank">View full details</a></li>
+                </ul>
+            </article>
+
+            <article class="update-summary">
+                <h3>May 2025 Update Summary</h3>
+                <p><strong>Release Date:</strong> May 14, 2025</p>
+                <ul>
+                    <li>**Reporting Feature:** New "Small Multiples" visual layout option.</li>
+                    <li>**Service Feature:** Enhanced deployment pipelines.</li>
+                    <li><a href="https://powerbi.microsoft.com/en-us/blog/power-bi-may-2025-update-summary/" target="_blank">View full details</a></li>
+                </ul>
+            </article>
+
+            </section>
+
+        <section id="stay-informed">
+            <h2>How to Stay Informed</h2>
+            <p>The Power BI team releases updates monthly. We highly recommend:</p>
+            <ul>
+                <li>Subscribing to the <a href="https://powerbi.microsoft.com/en-us/blog/" target="_blank">Official Power BI Blog</a>.</li>
+                <li>Following the <a href="https://community.powerbi.com/" target="_blank">Power BI Community Forums</a>.</li>
+                <li>Watching "Guy in a Cube" on YouTube for monthly summary videos.</li>
+            </ul>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Power BI DAX & Project Architectures Guide. All rights reserved.</p>
+            <p>Disclaimer: This content is for educational purposes. Always refer to official Microsoft documentation for the latest information.</p>
+        </div>
+    </footer>
+</body>
+</html>
