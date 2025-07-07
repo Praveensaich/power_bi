@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAX Fundamentals - Power BI DAX Guide</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>DAX Fundamentals</h1>
+            <p>The Core Concepts of Data Analysis Expressions</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dax_fundamentals.html" class="active">DAX Fundamentals</a></li>
+                <li><a href="dax_functions.html">DAX Functions</a></li>
+                <li><a href="advanced_dax.html">Advanced DAX</a></li>
+                <li><a href="powerbi_lifecycle.html">Power BI Lifecycle</a></li>
+                <li><a href="project_architectures.html">Project Architectures</a></li>
+                <li><a href="updates_news.html">Updates & News</a></li>
+                <li><a href="resources.html">Resources</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container content-section">
+        <h2>Understanding the Building Blocks of DAX</h2>
+        <p>This section lays the groundwork for writing effective DAX formulas. Mastering these fundamental concepts is crucial before diving into specific functions.</p>
+
+        <section id="calculated-vs-measures">
+            <h3>Calculated Columns vs. Measures: A Core Distinction</h3>
+            <p>Understanding when to use a calculated column versus a measure is foundational for efficient data modeling and accurate reporting.</p>
+
+            <h4>Calculated Columns</h4>
+            <p><strong>Theory:</strong> Calculated columns are new columns added to an existing table in your data model. Their values are computed and stored in the model's memory (VertiPaq engine) when the data is refreshed. They are evaluated row-by-row within the context of that row.</p>
+            <ul>
+                <li><strong>Use Cases:</strong> Static, row-level calculations that don't change based on filters applied in a report. Good for categorizations, simple concatenations, or fixed ratios per row.</li>
+                <li><strong>Impact:</strong> Increase model size and refresh time.</li>
+            </ul>
+            <p><strong>Syntax Example:</strong> Creating a 'Full Name' calculated column by combining 'First Name' and 'Last Name'.</p>
+            <pre><code>Full Name = 'Customers'[First Name] & " " & 'Customers'[Last Name]</code></pre>
+            <p><strong>Detailed Explanation:</strong> In this example, for every row in the 'Customers' table, DAX takes the value from the 'First Name' column in that specific row, adds a space, and then appends the 'Last Name' value from the same row. The result is stored as a new column.</p>
+            <p><strong>When NOT to use:</strong> Avoid for aggregations (like sum of sales), as these would calculate for every row and then you'd need to aggregate them in visuals, which is inefficient. Also, avoid for complex dynamic calculations.</p>
+
+            <h4>Measures</h4>
+            <p><strong>Theory:</strong> Measures are dynamic calculations that are computed on the fly based on the current filter context in your report. Their results are *not* stored in the data model, making them highly efficient for aggregation and dynamic analysis.</p>
+            <ul>
+                <li><strong>Use Cases:</strong> Aggregations (SUM, AVERAGE, COUNT, MIN, MAX), time intelligence calculations (YTD, MoM), complex KPIs, and any calculation that needs to react to user filters (slicers, visual interactions).</li>
+                <li><strong>Impact:</strong> Do not increase model size. Calculated only when needed by a visual.</li>
+            </ul>
+            <p><strong>Syntax Example:</strong> Calculating 'Total Sales'.</p>
+            <pre><code>Total Sales = SUM('Sales'[SalesAmount])</code></pre>
+            <p><strong>Detailed Explanation:</strong> When you drag 'Total Sales' into a visual, DAX evaluates this measure based on whatever filters are currently applied. If you filter by "Region = North", it sums sales *only* for the North region. If you then add "Product Category = Bikes", it sums sales for Bikes *within* the North region.</p>
+            <p><strong>When NOT to use:</strong> Cannot be used directly as a row in a table visual (e.g., you can't put `[Total Sales]` directly into a row of a matrix visual without a grouping column). Cannot be used directly in row context functions without careful handling (e.g., within `SUMX` if not defined correctly).</p>
+        </section>
+
+        <section id="evaluation-context">
+            <h3>Evaluation Context: The Heart of DAX</h3>
+            <p>Understanding how DAX evaluates formulas based on the surrounding context is the single most important concept in mastering the language. There are two primary types of context:</p>
+
+            <h4>1. Row Context</h4>
+            <p><strong>Theory:</strong> Row context refers to the "current row" being evaluated. It's an implicit loop that DAX performs. When you write a calculated column, DAX automatically creates a row context for each row of that table. For measures, row context is typically introduced explicitly by "iterator" functions (functions ending in 'X', e.g., `SUMX`, `AVERAGEX`).</p>
+            <ul>
+                <li><strong>Where it appears:</strong>
+                    <ul>
+                        <li>Automatically in calculated columns.</li>
+                        <li>Explicitly in `ITERATOR` functions like `SUMX`, `AVERAGEX`, `MAXX`, `MINX`, `COUNTX`, `CONCATENATEX`.</li>
+                    </ul>
+                </li>
+            </ul>
+            <p><strong>Example (Calculated Column - Implicit Row Context):</strong></p>
+            <pre><code>Order Line Profit = 'Sales'[Quantity] * ('Sales'[Unit Price] - 'Sales'[Cost])</code></pre>
+            <p><strong>Explanation:</strong> For each individual row in the 'Sales' table, DAX accesses the `Quantity`, `Unit Price`, and `Cost` values *from that specific row* to calculate the `Order Line Profit` for that row.</p>
+
+            <p><strong>Example (Measure with Iterator - Explicit Row Context):</strong></p>
+            <pre><code>Total Revenue from Sales Lines = SUMX(
+    'Sales',
+    'Sales'[Quantity] * 'Sales'[Unit Price]
+)</code></pre>
+            <p><strong>Explanation:</strong> `SUMX` iterates row by row over the 'Sales' table. For each row, it calculates `Quantity * Unit Price` within that row's context, and then `SUMX` aggregates all those individual results. This is powerful because it allows row-level calculations *before* aggregation.</p>
+
+            <h4>2. Filter Context</h4>
+            <p><strong>Theory:</strong> Filter context is the set of filters currently applied to your data model. These filters determine which subset of data is being considered for a calculation. Filters can come from various sources:</p>
+            <ul>
+                <li><strong>Visualizations:</strong> Filters implicitly applied by rows/columns in a matrix, axis categories in a chart.</li>
+                <li><strong>Slicers:</strong> User selections on slicers.</li>
+                <li><strong>Report-level/Page-level/Visual-level Filters:</strong> Filters set in the Power BI filter pane.</li>
+                <li><strong>Relationships:</strong> Filters propagate across related tables.</li>
+                <li><strong>DAX Functions:</strong> Explicitly modified by functions like `CALCULATE`, `FILTER`, `ALL`, `ALLEXCEPT`, `KEEPFILTERS`.</li>
+            </ul>
+            <p><strong>Example (Implicit Filter Context):</strong> If you have a slicer for 'Region' and select "North", any measure you display (like `[Total Sales]`) will automatically show sales only for the North region because the filter context has been applied.</p>
+
+            <p><strong>Example (Explicit Filter Context with CALCULATE):</strong> `CALCULATE` is the most powerful DAX function because it allows you to *modify* the filter context for an expression.</p>
+            <pre><code>Sales for East Region = CALCULATE(
+    [Total Sales],
+    'Geography'[Region] = "East"
+)</code></pre>
+            <p><strong>Explanation:</strong> Even if your report is currently filtered to "West Region", this measure will *temporarily override* that filter (or add to it if no region filter exists) to calculate `[Total Sales]` specifically for the "East" region, regardless of other filters.</p>
+
+            <p><strong>Example (Removing Filters with ALL):</strong></p>
+            <pre><code>Total Sales All Products = CALCULATE(
+    [Total Sales],
+    ALL('Product')
+)</code></pre>
+            <p><strong>Explanation:</strong> This measure calculates the `[Total Sales]` ignoring any filters that might be applied to the 'Product' table (e.g., from a Product Category slicer or a Product Name in a visual). This is essential for calculating percentages of total.</p>
+
+            <h4>Context Transition</h4>
+            <p><strong>Theory:</strong> Context transition is the process by which row context is converted into filter context. This implicitly occurs when a measure (which typically evaluates in filter context) is called from within a row context (e.g., in a calculated column or inside an iterator function).</p>
+            <p><strong>Example:</strong> Calculating 'Sales per Customer' as a calculated column in the 'Customers' table.</p>
+            <pre><code>Sales Per Customer (Calculated Column) = [Total Sales]</code></pre>
+            <p><strong>Explanation:</strong> For each row in the 'Customers' table (which has row context), when `[Total Sales]` (a measure) is called, DAX performs a context transition. It takes the values from the current row (e.g., `CustomerID = 123`) and converts them into a filter context (effectively `FILTER(ALL(Customers), Customers[CustomerID] = 123)`). Then, `[Total Sales]` is evaluated under this new filter context, giving you the total sales *for that specific customer*.</p>
+        </section>
+
+        </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Power BI DAX & Project Architectures Guide. All rights reserved.</p>
+            <p>Disclaimer: This content is for educational purposes. Always refer to official Microsoft documentation for the latest information.</p>
+        </div>
+    </footer>
+</body>
+</html>
