@@ -1,0 +1,270 @@
+/* General Body Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa; /* Light grey background */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Ensures footer sticks to bottom */
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 15px;
+}
+
+/* Header Styles */
+header {
+    background-color: #2c3e50; /* Dark blue-grey */
+    color: #fff;
+    padding: 2rem 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.8em;
+    letter-spacing: 1px;
+}
+
+header p {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+/* Navigation Styles */
+nav {
+    background-color: #34495e; /* Slightly lighter blue-grey */
+    padding: 0.8rem 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky; /* Make nav stick to top */
+    top: 0;
+    z-index: 1000; /* Ensure it stays on top */
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 12px 18px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 4px;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+    background-color: #1abc9c; /* Teal */
+    color: #fff;
+}
+
+/* Content Section Styles */
+.content-section {
+    flex: 1; /* Allows content to push footer down */
+    background-color: #ffffff;
+    padding: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+section {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee; /* Separator for sections */
+}
+
+section:last-child {
+    border-bottom: none; /* No border for the last section */
+}
+
+h1, h2, h3, h4 {
+    color: #2c3e50; /* Dark blue-grey */
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+h2 {
+    font-size: 2em;
+    border-bottom: 2px solid #1abc9c;
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+}
+
+h3 {
+    font-size: 1.6em;
+    color: #34495e;
+}
+
+h4 {
+    font-size: 1.3em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+ul {
+    list-style-type: disc;
+    margin-left: 25px;
+    margin-bottom: 1em;
+}
+
+ol {
+    margin-left: 25px;
+    margin-bottom: 1em;
+}
+
+/* Code Block Styles */
+pre {
+    background-color: #eef2f5; /* Light blue-grey for code blocks */
+    padding: 15px;
+    border-left: 5px solid #1abc9c; /* Teal left border */
+    overflow-x: auto; /* Enable horizontal scrolling for long lines */
+    word-wrap: break-word; /* Wrap long words */
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    color: #c0392b; /* A distinct color for inline code */
+    background-color: #eef2f5;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+pre code {
+    color: #333; /* Darker color for code in pre blocks */
+    background-color: transparent;
+    padding: 0;
+}
+
+/* Links within content */
+a {
+    color: #1abc9c; /* Teal links */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #16a085; /* Darker teal on hover */
+    text-decoration: underline;
+}
+
+/* Image styles for architecture diagrams */
+img {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Update Summary specific styling */
+.update-summary {
+    background-color: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.update-summary h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.4em;
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 25px;
+    background-color: #2c3e50; /* Dark blue-grey */
+    color: #fff;
+    margin-top: auto; /* Pushes footer to the bottom */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+}
+
+footer p {
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+
+/* Responsive Design (Basic) */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2em;
+    }
+
+    nav ul li {
+        margin: 5px 8px;
+    }
+
+    nav ul li a {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+
+    .container {
+        width: 95%;
+        padding: 0 10px;
+    }
+
+    .content-section {
+        padding: 20px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    h2 {
+        font-size: 1.6em;
+    }
+
+    h3 {
+        font-size: 1.4em;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 1.5rem 0;
+    }
+    nav ul {
+        flex-direction: column; /* Stack nav items vertically */
+        align-items: center;
+    }
+    nav ul li {
+        margin: 5px 0;
+        width: 100%; /* Full width for vertical stack */
+    }
+    nav ul li a {
+        padding: 10px 0;
+        width: 80%; /* Center the link */
+        margin: auto;
+    }
+}
