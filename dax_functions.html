@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAX Functions - Power BI DAX Guide</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>DAX Functions Reference</h1>
+            <p>A Comprehensive Guide to Key DAX Functions with Examples</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dax_fundamentals.html">DAX Fundamentals</a></li>
+                <li><a href="dax_functions.html" class="active">DAX Functions</a></li>
+                <li><a href="advanced_dax.html">Advanced DAX</a></li>
+                <li><a href="powerbi_lifecycle.html">Power BI Lifecycle</a></li>
+                <li><a href="project_architectures.html">Project Architectures</a></li>
+                <li><a href="updates_news.html">Updates & News</a></li>
+                <li><a href="resources.html">Resources</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container content-section">
+        <p>This section provides a detailed reference for commonly used DAX functions, categorized for easier navigation. Each function includes its purpose, syntax, and practical examples.</p>
+
+        <section id="aggregation-functions">
+            <h2>1. Aggregation Functions</h2>
+            <p>Functions that perform calculations (like sum, average, count) over a set of values.</p>
+
+            <article>
+                <h3>SUM()</h3>
+                <p><strong>Purpose:</strong> Adds all the numbers in a column.</p>
+                <p><strong>Syntax:</strong> <code>SUM(&lt;column>)</code></p>
+                <p><strong>Example:</strong> Calculating total revenue.</p>
+                <pre><code>Total Revenue = SUM(Sales[Revenue])</code></pre>
+                <p><strong>Explanation:</strong> This measure sums all the values in the 'Revenue' column of the 'Sales' table, respecting any applied filters. If filtered by 'Year = 2024', it sums 2024 revenues.</p>
+            </article>
+
+            <article>
+                <h3>AVERAGE()</h3>
+                <p><strong>Purpose:</strong> Calculates the arithmetic mean of the numbers in a column.</p>
+                <p><strong>Syntax:</strong> <code>AVERAGE(&lt;column>)</code></p>
+                <p><strong>Example:</strong> Average unit price of products sold.</p>
+                <pre><code>Average Unit Price Sold = AVERAGE(Sales[UnitPrice])</code></pre>
+                <p><strong>Explanation:</strong> Returns the average value of 'UnitPrice' from the 'Sales' table. Useful for understanding typical selling prices.</p>
+            </article>
+
+            <article>
+                <h3>COUNT() & COUNTA() & COUNTROWS()</h3>
+                <p><strong>Purpose:</strong>
+                    <ul>
+                        <li><code>COUNT()</code>: Counts numbers in a column.</li>
+                        <li><code>COUNTA()</code>: Counts non-blank values in a column (numbers, text, dates).</li>
+                        <li><code>COUNTROWS()</code>: Counts the number of rows in a table (or a table expression).</li>
+                    </ul>
+                </p>
+                <p><strong>Syntax:</strong> <code>COUNT(&lt;column>)</code>, <code>COUNTA(&lt;column>)</code>, <code>COUNTROWS(&lt;table>)</code></p>
+                <p><strong>Example (Count of Orders):</strong></p>
+                <pre><code>Number of Orders = COUNTROWS(Sales)</code></pre>
+                <p><strong>Explanation:</strong> Counts the total number of rows in the 'Sales' table, where each row represents an order line item. This is generally preferred over `COUNT` for counting occurrences.</p>
+            </article>
+
+            <article>
+                <h3>DISTINCTCOUNT()</h3>
+                <p><strong>Purpose:</strong> Counts the number of distinct (unique) values in a column.</p>
+                <p><strong>Syntax:</strong> <code>DISTINCTCOUNT(&lt;column>)</code></p>
+                <p><strong>Example:</strong> Counting the number of unique customers.</p>
+                <pre><code>Unique Customers = DISTINCTCOUNT(Customers[CustomerID])</code></pre>
+                <p><strong>Explanation:</strong> Essential for understanding customer base size, distinct products sold, etc.</p>
+            </article>
+            </section>
+
+        <section id="logical-functions">
+            <h2>2. Logical Functions</h2>
+            <p>Functions that return a boolean (TRUE/FALSE) or a value based on a condition.</p>
+
+            <article>
+                <h3>IF()</h3>
+                <p><strong>Purpose:</strong> Checks a condition, and returns one value when TRUE, and another when FALSE.</p>
+                <p><strong>Syntax:</strong> <code>IF(&lt;logical_test>, &lt;value_if_true>, &lt;value_if_false>)</code></p>
+                <p><strong>Example:</strong> Categorizing sales performance.</p>
+                <pre><code>Sales Performance = IF([Total Sales] > 500000, "High Performer", "Low Performer")</code></pre>
+                <p><strong>Explanation:</strong> This measure categorizes the total sales based on a threshold. It's evaluated in the current filter context.</p>
+            </article>
+
+            <article>
+                <h3>SWITCH()</h3>
+                <p><strong>Purpose:</strong> Evaluates an expression against a list of values and returns the result expression corresponding to the first matching value. More efficient than nested IFs.</p>
+                <p><strong>Syntax:</strong> <code>SWITCH(&lt;expression>, &lt;value1>, &lt;result1>, [&lt;value2>, &lt;result2>...], [&lt;else_value>])</code><br>
+                Or <code>SWITCH(TRUE(), &lt;condition1>, &lt;result1>, [&lt;condition2>, &lt;result2>...], [&lt;else_value>])</code> for multiple conditions.</p>
+                <p><strong>Example:</strong> Product size classification.</p>
+                <pre><code>Product Size = SWITCH(TRUE(),
+    Products[Weight] < 1, "Small",
+    Products[Weight] < 10, "Medium",
+    Products[Weight] >= 10, "Large",
+    "N/A" // Default value if none match
+)</code></pre>
+                <p><strong>Explanation:</strong> This calculated column assigns a size category to each product based on its weight. The `TRUE()` syntax allows for multiple, sequential conditions.</p>
+            </article>
+            </section>
+
+        <section id="text-functions">
+            <h2>3. Text Functions</h2>
+            <p>Functions for manipulating text strings.</p>
+            <article>
+                <h3>FORMAT()</h3>
+                <p><strong>Purpose:</strong> Formats a value into a text string with the specified format. Useful for custom number/date formats.</p>
+                <p><strong>Syntax:</strong> <code>FORMAT(&lt;value>, &lt;format_string>)</code></p>
+                <p><strong>Example:</strong> Displaying sales as currency.</p>
+                <pre><code>Formatted Sales = FORMAT([Total Sales], "$#,##0.00")</code></pre>
+                <p><strong>Explanation:</strong> This converts the `[Total Sales]` measure into a text string formatted as a currency with two decimal places and comma separators.</p>
+            </article>
+        </section>
+
+        <section id="date-time-functions">
+            <h2>4. Date & Time Functions and Time Intelligence</h2>
+            <p>Functions for working with date/time values and performing time-based calculations. **A properly marked date table is crucial for time intelligence functions.**</p>
+
+            <article>
+                <h3>Basic Date Functions (YEAR, MONTH, DAY, TODAY, NOW)</h3>
+                <p><strong>Purpose:</strong> Extract parts of a date, or get current date/time.</p>
+                <p><strong>Example (Calculated Column):</strong> Extracting the year from an order date.</p>
+                <pre><code>Order Year = YEAR(Sales[OrderDate])</code></pre>
+            </article>
+
+            <article>
+                <h3>TOTALYTD(), TOTALMTD(), TOTALQTD()</h3>
+                <p><strong>Purpose:</strong> Calculate a year-to-date, month-to-date, or quarter-to-date total, respectively.</p>
+                <p><strong>Syntax:</strong> <code>TOTALYTD(&lt;expression>, &lt;dates_column>[, &lt;filter>][, &lt;year_end_date>])</code></p>
+                <p><strong>Example:</strong> Year-to-Date Sales.</p>
+                <pre><code>Sales YTD = TOTALYTD([Total Sales], 'Date'[Date])</code></pre>
+                <p><strong>Explanation:</strong> Sums `[Total Sales]` from the beginning of the year up to the last visible date in the current filter context.</p>
+            </article>
+
+            <article>
+                <h3>SAMEPERIODLASTYEAR()</h3>
+                <p><strong>Purpose:</strong> Shifts the date context to the same period in the previous year.</p>
+                <p><strong>Syntax:</strong> <code>SAMEPERIODLASTYEAR(&lt;dates_column>)</code></p>
+                <p><strong>Example:</strong> Sales for the same period last year.</p>
+                <pre><code>Sales LY = CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date]))</code></pre>
+                <p><strong>Explanation:</strong> Calculates `[Total Sales]` for the identical period of time (e.g., if filtered for Jan-Mar 2024, it calculates for Jan-Mar 2023).</p>
+            </article>
+
+            <article>
+                <h3>DATEADD()</h3>
+                <p><strong>Purpose:</strong> Returns a table that contains a column of dates, shifted forward or backward in time by the specified number of intervals.</p>
+                <p><strong>Syntax:</strong> <code>DATEADD(&lt;dates>, &lt;number_of_intervals>, &lt;interval>)</code></p>
+                <p><strong>Example:</strong> Sales from the previous month.</p>
+                <pre><code>Sales Previous Month = CALCULATE([Total Sales], DATEADD('Date'[Date], -1, MONTH))</code></pre>
+                <p><strong>Explanation:</strong> This measure shifts the filter context back by one month and calculates `[Total Sales]` for that shifted period.</p>
+            </article>
+            </section>
+
+        <section id="filter-functions">
+            <h2>5. Filter Functions</h2>
+            <p>These functions are critical for manipulating the filter context in your DAX expressions. `CALCULATE` is the cornerstone.</p>
+
+            <article>
+                <h3>CALCULATE()</h3>
+                <p><strong>Purpose:</strong> Evaluates an expression in a context modified by filters. It's the most powerful and frequently used DAX function.</p>
+                <p><strong>Syntax:</strong> <code>CALCULATE(&lt;expression>, &lt;filter1> [, &lt;filter2>...])</code></p>
+                <p><strong>Example 1 (Adding a Filter):</strong> Calculate sales for a specific product category.</p>
+                <pre><code>Sales of Electronics = CALCULATE(
+    [Total Sales],
+    Products[Category] = "Electronics"
+)</code></pre>
+                <p><strong>Explanation:</strong> This measure overrides or adds a filter to the current context, forcing the calculation of `[Total Sales]` only for products where the 'Category' is "Electronics".</p>
+
+                <p><strong>Example 2 (Removing Filters with ALL):</strong> Calculate total sales irrespective of product filters.</p>
+                <pre><code>Total Sales All Products = CALCULATE(
+    [Total Sales],
+    ALL(Products) // Removes all filters from the entire Products table
+)</code></pre>
+                <p><strong>Explanation:</strong> Useful for "percentage of total" calculations. If you put `[Total Sales]` next to `[Total Sales All Products]` and filter by category, the first will change, but the second will remain constant.</p>
+
+                <p><strong>Example 3 (Keeping Filters with KEEPFILTERS):</strong></p>
+                <pre><code>Sales for Current Filtered Category Only = CALCULATE(
+    [Total Sales],
+    KEEPFILTERS(Products[Category] = "Clothing") // If report is filtered by "Footwear", it will only show "Clothing" sales within "Footwear" which is 0. If no filter, it shows clothing.
+)</code></pre>
+                <p><strong>Explanation:</strong> `KEEPFILTERS` interacts with existing filters by retaining them and adding the new filter. Without `KEEPFILTERS`, a new filter context from `CALCULATE` would replace conflicting filters.</p>
+            </article>
+
+            <article>
+                <h3>FILTER()</h3>
+                <p><strong>Purpose:</strong> Returns a table filtered by a boolean expression. Often used as a table argument within other functions (especially `CALCULATE` or iterator functions).</p>
+                <p><strong>Syntax:</strong> <code>FILTER(&lt;table>, &lt;filter_expression>)</code></p>
+                <p><strong>Example:</strong> Sum of sales for high-value customers (customers with total sales > $1000).</p>
+                <pre><code>High Value Customer Sales =
+CALCULATE(
+    [Total Sales],
+    FILTER(
+        Customers,
+        CALCULATE([Total Sales], Customers) > 1000 // Sub-calculate sales per customer
+    )
+)</code></pre>
+                <p><strong>Explanation:</strong> This formula first filters the `Customers` table to include only those customers whose `[Total Sales]` (when evaluated for that specific customer) exceed 1000. Then, it calculates the `[Total Sales]` for that filtered set of customers. This demonstrates `FILTER` creating a table expression that `CALCULATE` then uses.</p>
+            </article>
+            </section>
+
+        <section id="relationship-functions">
+            <h2>6. Relationship Functions</h2>
+            <p>Functions that allow you to navigate or utilize relationships in your data model.</p>
+
+            <article>
+                <h3>RELATED()</h3>
+                <p><strong>Purpose:</strong> Retrieves a value from a column in another table on the 'one' side of a one-to-many relationship, typically used in a calculated column.</p>
+                <p><strong>Syntax:</strong> <code>RELATED(&lt;column>)</code></p>
+                <p><strong>Example (Calculated Column in Sales Table):</strong> Get the Product Category name into the Sales table.</p>
+                <pre><code>Product Category = RELATED('Product'[CategoryName])</code></pre>
+                <p><strong>Explanation:</strong> For each row in the 'Sales' table, this looks up the related 'Product' table based on the relationship and fetches the 'CategoryName' for that product. Requires an active relationship.</p>
+            </article>
+
+            <article>
+                <h3>RELATEDTABLE()</h3>
+                <p><strong>Purpose:</strong> Returns a table that contains all rows from the 'many' side of a relationship that are related to the current row on the 'one' side. Useful within iterator functions or `CALCULATE` to filter a related table.</p>
+                <p><strong>Syntax:</strong> <code>RELATEDTABLE(&lt;table>)</code></p>
+                <p><strong>Example (Calculated Column in Product Table):</strong> Count how many sales orders each product has.</p>
+                <pre><code>Number of Sales Orders = COUNTROWS(RELATEDTABLE(Sales))</code></pre>
+                <p><strong>Explanation:</strong> For each product in the 'Product' table, `RELATEDTABLE(Sales)` returns a table containing *only* the sales rows associated with that specific product. `COUNTROWS` then counts those related sales rows.</p>
+            </article>
+
+            <article>
+                <h3>USERELATIONSHIP()</h3>
+                <p><strong>Purpose:</strong> Specifies an inactive relationship to be used for a specific calculation. Useful when you have multiple relationships between two tables and need to activate a specific one for a measure.</p>
+                <p><strong>Syntax:</strong> <code>USERELATIONSHIP(&lt;column1>, &lt;column2>)</code></p>
+                <p><strong>Example:</strong> Calculate Sales by Order Date and Sales by Ship Date (where only Order Date is active).</p>
+                <pre><code>Sales by Ship Date = CALCULATE(
+    [Total Sales],
+    USERELATIONSHIP(Sales[ShipDate], 'Date'[Date])
+)</code></pre>
+                <p><strong>Explanation:</strong> If 'Sales'[OrderDate] is the active relationship to 'Date'[Date], this measure temporarily activates the inactive relationship between 'Sales'[ShipDate] and 'Date'[Date] *only for this calculation*, allowing you to analyze sales based on ship date filters.</p>
+            </article>
+        </section>
+
+        <section id="table-manipulation-functions">
+            <h2>7. Table Manipulation & Variable Functions</h2>
+            <p>Functions that return tables or help structure complex DAX formulas for readability and performance.</p>
+
+            <article>
+                <h3>VAR (Variables)</h3>
+                <p><strong>Purpose:</strong> Defines variables to store the result of an expression. Variables improve readability, simplify complex formulas, and significantly boost performance by preventing redundant calculations.</p>
+                <p><strong>Syntax:</strong>
+                <pre><code>VAR &lt;variable_name> = &lt;expression>
+RETURN
+    &lt;expression_using_variable(s)></code></pre>
+                <p><strong>Example:</strong> Calculate percentage of total sales for selected products.</p>
+                <pre><code>% Sales of Selected Products =
+VAR CurrentSales = [Total Sales]
+VAR AllSelectedSales = CALCULATE([Total Sales], ALLSELECTED(Products))
+RETURN
+    DIVIDE(CurrentSales, AllSelectedSales, 0)
+</code></pre>
+                <p><strong>Explanation:</strong> `CurrentSales` stores the total sales under the current filter context. `AllSelectedSales` stores the total sales for all products currently visible in the report (ignoring product-specific filters applied within the visual). Using variables prevents `[Total Sales]` from being calculated multiple times, improving efficiency.</p>
+            </article>
+
+            <article>
+                <h3>ADDCOLUMNS()</h3>
+                <p><strong>Purpose:</strong> Adds calculated columns to an existing or virtual table expression.</p>
+                <p><strong>Syntax:</strong> <code>ADDCOLUMNS(&lt;table>, &lt;name1>, &lt;expression1> [, &lt;name2>, &lt;expression2>...])</code></p>
+                <p><strong>Example (Virtual Table for Top Customers):</strong></p>
+                <pre><code>Top 10 Customers by Sales =
+TOPN(
+    10,
+    ADDCOLUMNS(
+        SUMMARIZE(Sales, Customers[CustomerName]),
+        "Customer Sales", [Total Sales]
+    ),
+    "Customer Sales"
+)</code></pre>
+                <p><strong>Explanation:</strong> This creates a temporary table that summarizes sales by customer name, adds a calculated column "Customer Sales" to it using the `[Total Sales]` measure for each customer, and then returns the top 10 rows from that table based on "Customer Sales".</p>
+            </article>
+
+            <article>
+                <h3>SUMMARIZE()</h3>
+                <p><strong>Purpose:</strong> Returns a summary table for the requested totals over a set of groups. Similar to GROUP BY in SQL.</p>
+                <p><strong>Syntax:</strong> <code>SUMMARIZE(&lt;table>, &lt;groupBy_columnName1> [, &lt;groupBy_columnName2>...][, &lt;name1>, &lt;expression1>...])</code></p>
+                <p><strong>Example (Sales by Category and Year):</strong></p>
+                <pre><code>Sales By Category & Year = SUMMARIZE(
+    Sales,
+    Product[Category],
+    'Date'[Calendar Year],
+    "Total Sales Amount", [Total Sales]
+)</code></pre>
+                <p><strong>Explanation:</strong> This creates a virtual table with 'Product Category' and 'Calendar Year' columns, and a measure `Total Sales Amount` that sums `[Total Sales]` for each unique combination of category and year.</p>
+            </article>
+            </section>
+        </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Power BI DAX & Project Architectures Guide. All rights reserved.</p>
+            <p>Disclaimer: This content is for educational purposes. Always refer to official Microsoft documentation for the latest information.</p>
+        </div>
+    </footer>
+</body>
+</html>
