@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power BI DAX & Project Architectures: End-to-End Comprehensive Guide</title>
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa; /* Light grey background */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensures footer sticks to bottom */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #2c3e50; /* Dark blue-grey */
+            color: #fff;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8em;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background-color: #34495e; /* Slightly lighter blue-grey */
+            padding: 0.8rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky; /* Make nav stick to top */
+            top: 0;
+            z-index: 1000; /* Ensure it stays on top */
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 12px 18px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border-radius: 4px;
+        }
+
+        nav ul li a:hover,
+        nav ul li a.active {
+            background-color: #1abc9c; /* Teal */
+            color: #fff;
+        }
+
+        /* Content Section Styles */
+        .content-section {
+            flex: 1; /* Allows content to push footer down */
+            background-color: #ffffff;
+            padding: 30px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        section {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee; /* Separator for sections */
+        }
+
+        section:last-child {
+            border-bottom: none; /* No border for the last section */
+        }
+
+        h1, h2, h3, h4 {
+            color: #2c3e50; /* Dark blue-grey */
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 2em;
+            border-bottom: 2px solid #1abc9c;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        h3 {
+            font-size: 1.6em;
+            color: #34495e;
+        }
+
+        h4 {
+            font-size: 1.3em;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 1em;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 25px;
+            margin-bottom: 1em;
+        }
+
+        ol {
+            margin-left: 25px;
+            margin-bottom: 1em;
+        }
+
+        /* Code Block Styles */
+        pre {
+            background-color: #eef2f5; /* Light blue-grey for code blocks */
+            padding: 15px;
+            border-left: 5px solid #1abc9c; /* Teal left border */
+            overflow-x: auto; /* Enable horizontal scrolling for long lines */
+            word-wrap: break-word; /* Wrap long words */
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            color: #c0392b; /* A distinct color for inline code */
+            background-color: #eef2f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        pre code {
+            color: #333; /* Darker color for code in pre blocks */
+            background-color: transparent;
+            padding: 0;
+        }
+
+        /* Links within content */
+        a {
+            color: #1abc9c; /* Teal links */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #16a085; /* Darker teal on hover */
+            text-decoration: underline;
+        }
+
+        /* Image styles for architecture diagrams */
+        img {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Update Summary specific styling */
+        .update-summary {
+            background-color: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .update-summary h3 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+
+        /* Footer Styles */
+        footer {
+            text-align: center;
+            padding: 25px;
+            background-color: #2c3e50; /* Dark blue-grey */
+            color: #fff;
+            margin-top: auto; /* Pushes footer to the bottom */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        /* Responsive Design (Basic) */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            nav ul li {
+                margin: 5px 8px;
+            }
+
+            nav ul li a {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+
+            .container {
+                width: 95%;
+                padding: 0 10px;
+            }
+
+            .content-section {
+                padding: 20px;
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+
+            h2 {
+                font-size: 1.6em;
+            }
+
+            h3 {
+                font-size: 1.4em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 1.5rem 0;
+            }
+            nav ul {
+                flex-direction: column; /* Stack nav items vertically */
+                align-items: center;
+            }
+            nav ul li {
+                margin: 5px 0;
+                width: 100%; /* Full width for vertical stack */
+            }
+            nav ul li a {
+                padding: 10px 0;
+                width: 80%; /* Center the link */
+                margin: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Power BI DAX & Project Architectures</h1>
+            <p>Your Comprehensive Guide to Mastering Power BI End-to-End</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#welcome">Home</a></li>
+                <li><a href="#dax-fundamentals">DAX Fundamentals</a></li>
+                <li><a href="#dax-functions">DAX Functions</a></li>
+                <li><a href="#advanced-dax">Advanced DAX</a></li>
+                <li><a href="#powerbi-lifecycle">Power BI Lifecycle</a></li>
+                <li><a href="#project-architectures">Project Architectures</a></li>
+                <li><a href="#updates-news">Updates & News</a></li>
+                <li><a href="#resources">Resources</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container content-section">
+
+        <section id="welcome">
+            <h2>Welcome to the Ultimate Power BI & DAX Resource</h2>
+            <p>Are you looking to master Power BI from data connection to insightful reporting, with a deep dive into the powerful DAX language? This website is designed to be your go-to guide, offering detailed theories, practical examples, and real-world project architectures.</p>
+            <p>Whether you're a beginner just starting your Power BI journey or an experienced professional looking to refine your DAX skills and understand robust project implementations, you'll find valuable content here.</p>
+            <h3>What You'll Learn:</h3>
+            <ul>
+                <li><strong>DAX from Basics to Advanced:</strong> Understand context, functions, and powerful patterns.</li>
+                <li><strong>End-to-End Power BI Development:</strong> Navigate data acquisition, transformation, modeling, visualization, publishing, and maintenance.</li>
+                <li><strong>Real-World Project Architectures:</strong> Learn how to design scalable and efficient Power BI solutions for various business needs.</li>
+                <li><strong>Latest Updates & Best Practices:</strong> Stay informed with the newest features and recommended approaches.</li>
+            </ul>
+            <p>Explore the navigation above to dive into specific topics.</p>
+        </section>
+
+        <section id="why-dax">
+            <h2>Why DAX is the Heart of Power BI Analytics</h2>
+            <p>While Power Query (M language) handles data preparation, DAX is where true analytical power resides. It allows you to:</p>
+            <ul>
+                <li>Create custom calculations (measures) that respond dynamically to user selections.</li>
+                <li>Perform time intelligence analysis (Year-to-Date, Month-over-Month, etc.).</li>
+                <li>Build complex logic for key performance indicators (KPIs).</li>
+                <li>Derive new insights that aren't possible with raw data alone.</li>
+            </ul>
+            <p>Without a solid understanding of DAX, you're only scratching the surface of Power BI's capabilities.</p>
+        </section>
+
+        <section id="latest-updates-snippet">
+            <h2>Latest Insights</h2>
+            <p>Stay current with the ever-evolving Power BI landscape. Check out our <a href="#updates-news">Updates & News</a> section for the latest features and announcements. Here's a quick highlight:</p>
+            <p><em>July 2025 Power BI Desktop update brings enhanced visual calculations and deeper Microsoft Fabric integration.</em></p>
+        </section>
+
+        ---
+
+        <section id="dax-fundamentals">
+            <h2>DAX Fundamentals: The Building Blocks</h2>
+            <p>This section lays the groundwork for writing effective DAX formulas. Mastering these fundamental concepts is crucial before diving into specific functions.</p>
+
+            <section id="calculated-vs-measures">
+                <h3>Calculated Columns vs. Measures: A Core Distinction</h3>
+                <p>Understanding when to use a calculated column versus a measure is foundational for efficient data modeling and accurate reporting.</p>
+
+                <h4>Calculated Columns</h4>
+                <p><strong>Theory:</strong> Calculated columns are new columns added to an existing table in your data model. Their values are computed and stored in the model's memory (VertiPaq engine) when the data is refreshed. They are evaluated row-by-row within the context of that row.</p>
+                <ul>
+                    <li><strong>Use Cases:</strong> Static, row-level calculations that don't change based on filters applied in a report. Good for categorizations, simple concatenations, or fixed ratios per row.</li>
+                    <li><strong>Impact:</strong> Increase model size and refresh time.</li>
+                </ul>
+                <p><strong>Syntax Example:</strong> Creating a 'Full Name' calculated column by combining 'First Name' and 'Last Name'.</p>
+                <pre><code>Full Name = 'Customers'[First Name] & " " & 'Customers'[Last Name]</code></pre>
+                <p><strong>Detailed Explanation:</strong> In this example, for every row in the 'Customers' table, DAX takes the value from the 'First Name' column in that specific row, adds a space, and then appends the 'Last Name' value from the same row. The result is stored as a new column.</p>
+                <p><strong>When NOT to use:</strong> Avoid for aggregations (like sum of sales), as these would calculate for every row and then you'd need to aggregate them in visuals, which is inefficient. Also, avoid for complex dynamic calculations.</p>
+
+                <h4>Measures</h4>
+                <p><strong>Theory:</strong> Measures are dynamic calculations that are computed on the fly based on the current filter context in your report. Their results are *not* stored in the data model, making them highly efficient for aggregation and dynamic analysis.</p>
+                <ul>
+                    <li><strong>Use Cases:</strong> Aggregations (SUM, AVERAGE, COUNT, MIN, MAX), time intelligence calculations (YTD, MoM), complex KPIs, and any calculation that needs to react to user filters (slicers, visual interactions).</li>
+                    <li><strong>Impact:</strong> Do not increase model size. Calculated only when needed by a visual.</li>
+                </ul>
+                <p><strong>Syntax Example:</strong> Calculating 'Total Sales'.</p>
+                <pre><code>Total Sales = SUM('Sales'[SalesAmount])</code></pre>
+                <p><strong>Detailed Explanation:</strong> When you drag 'Total Sales' into a visual, DAX evaluates this measure based on whatever filters are currently applied. If you filter by "Region = North", it sums sales *only* for the North region. If you then add "Product Category = Bikes", it sums sales for Bikes *within* the North region.</p>
+                <p><strong>When NOT to use:</strong> Cannot be used directly as a row in a table visual (e.g., you can't put `[Total Sales]` directly into a row of a matrix visual without a grouping column). Cannot be used directly in row context functions without careful handling (e.g., within `SUMX` if not defined correctly).</p>
+            </section>
+
+            <section id="evaluation-context">
+                <h3>Evaluation Context: The Heart of DAX</h3>
+                <p>Understanding how DAX evaluates formulas based on the surrounding context is the single most important concept in mastering the language. There are two primary types of context:</p>
+
+                <h4>1. Row Context</h4>
+                <p><strong>Theory:</strong> Row context refers to the "current row" being evaluated. It's an implicit loop that DAX performs. When you write a calculated column, DAX automatically creates a row context for each row of that table. For measures, row context is typically introduced explicitly by "iterator" functions (functions ending in 'X', e.g., `SUMX`, `AVERAGEX`).</p>
+                <ul>
+                    <li><strong>Where it appears:</strong>
+                        <ul>
+                            <li>Automatically in calculated columns.</li>
+                            <li>Explicitly in `ITERATOR` functions like `SUMX`, `AVERAGEX`, `MAXX`, `MINX`, `COUNTX`, `CONCATENATEX`.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <p><strong>Example (Calculated Column - Implicit Row Context):</strong></p>
+                <pre><code>Order Line Profit = 'Sales'[Quantity] * ('Sales'[Unit Price] - 'Sales'[Cost])</code></pre>
+                <p><strong>Explanation:</strong> For each individual row in the 'Sales' table, DAX accesses the `Quantity`, `Unit Price`, and `Cost` values *from that specific row* to calculate the `Order Line Profit` for that row.</p>
+
+                <p><strong>Example (Measure with Iterator - Explicit Row Context):</strong></p>
+                <pre><code>Total Revenue from Sales Lines = SUMX(
+    'Sales',
+    'Sales'[Quantity] * 'Sales'[Unit Price]
+)</code></pre>
+                <p><strong>Explanation:</strong> `SUMX` iterates row by row over the 'Sales' table. For each row, it calculates `Quantity * Unit Price` within that row's context, and then `SUMX` aggregates all those individual results. This is powerful because it allows row-level calculations *before* aggregation.</p>
+
+                <h4>2. Filter Context</h4>
+                <p><strong>Theory:</strong> Filter context is the set of filters currently applied to your data model. These filters determine which subset of data is being considered for a calculation. Filters can come from various sources:</p>
+                <ul>
+                    <li><strong>Visualizations:</strong> Filters implicitly applied by rows/columns in a matrix, axis categories in a chart.</li>
+                    <li><strong>Slicers:</strong> User selections on slicers.</li>
+                    <li><strong>Report-level/Page-level/Visual-level Filters:</strong> Filters set in the Power BI filter pane.</li>
+                    <li><strong>Relationships:</strong> Filters propagate across related tables.</li>
+                    <li><strong>DAX Functions:</strong> Explicitly modified by functions like `CALCULATE`, `FILTER`, `ALL`, `ALLEXCEPT`, `KEEPFILTERS`.</li>
+                </ul>
+                <p><strong>Example (Implicit Filter Context):</strong> If you have a slicer for 'Region' and select "North", any measure you display (like `[Total Sales]`) will automatically show sales only for the North region because the filter context has been applied.</p>
+
+                <p><strong>Example (Explicit Filter Context with CALCULATE):</strong> `CALCULATE` is the most powerful DAX function because it allows you to *modify* the filter context for an expression.</p>
+                <pre><code>Sales for East Region = CALCULATE(
+    [Total Sales],
+    'Geography'[Region] = "East"
+)</code></pre>
+                <p><strong>Explanation:</strong> Even if your report is currently filtered to "West Region", this measure will *temporarily override* that filter (or add to it if no region filter exists) to calculate `[Total Sales]` specifically for the "East" region, regardless of other filters.</p>
+
+                <p><strong>Example (Removing Filters with ALL):</strong></p>
+                <pre><code>Total Sales All Products = CALCULATE(
+    [Total Sales],
+    ALL('Product') // Removes all filters from the entire Products table
+)</code></pre>
+                <p><strong>Explanation:</strong> This measure calculates the `[Total Sales]` ignoring any filters that might be applied to the 'Product' table (e.g., from a Product Category slicer or a Product Name in a visual). This is essential for calculating percentages of total.</p>
+
+                <p><strong>Example (Keeping Filters with KEEPFILTERS):</strong></p>
+                <pre><code>Sales for Current Filtered Category Only = CALCULATE(
+    [Total Sales],
+    KEEPFILTERS(Products[Category] = "Clothing") // If report is filtered by "Footwear", it will only show "Clothing" sales within "Footwear" which is 0. If no filter, it shows clothing.
+)</code></pre>
+                <p><strong>Explanation:</strong> `KEEPFILTERS` interacts with existing filters by retaining them and adding the new filter. Without `KEEPFILTERS`, a new filter context from `CALCULATE` would replace conflicting filters.</p>
+
+                <h4>Context Transition</h4>
+                <p><strong>Theory:</strong> Context transition is the process by which row context is converted into filter context. This implicitly occurs when a measure (which typically evaluates in filter context) is called from within a row context (e.g., in a calculated column or inside an iterator function).</p>
+                <p><strong>Example:</strong> Calculating 'Sales per Customer' as a calculated column in the 'Customers' table.</p>
+                <pre><code>Sales Per Customer (Calculated Column) = [Total Sales]</code></pre>
+                <p><strong>Explanation:</strong> For each row in the 'Customers' table (which has row context), when `[Total Sales]` (a measure) is called, DAX performs a context transition. It takes the values from the current row (e.g., `CustomerID = 123`) and converts them into a filter context (effectively `FILTER(ALL(Customers), Customers[CustomerID] = 123)`). Then, `[Total Sales]` is evaluated under this new filter context, giving you the total sales *for that specific customer*.</p>
+            </section>
+        </section>
+
+        ---
+
+        <section id="dax-functions">
+            <h2>Key DAX Functions & Categories</h2>
+            <p>This section provides a detailed reference for commonly used DAX functions, categorized for easier navigation. Each function includes its purpose, syntax, and practical examples.</p>
+
+            <section id="aggregation-functions">
+                <h3>1. Aggregation Functions</h3>
+                <p>Functions that perform calculations (like sum, average, count) over a set of values.</p>
+
+                <article>
+                    <h4>SUM()</h4>
+                    <p><strong>Purpose:</strong> Adds all the numbers in a column.</p>
+                    <p><strong>Syntax:</strong> <code>SUM(&lt;column>)</code></p>
+                    <p><strong>Example:</strong> Calculating total revenue.</p>
+                    <pre><code>Total Revenue = SUM(Sales[Revenue])</code></pre>
+                    <p><strong>Explanation:</strong> This measure sums all the values in the 'Revenue' column of the 'Sales' table, respecting any applied filters. If filtered by 'Year = 2024', it sums 2024 revenues.</p>
+                </article>
+
+                <article>
+                    <h4>AVERAGE()</h4>
+                    <p><strong>Purpose:</strong> Calculates the arithmetic mean of the numbers in a column.</p>
+                    <p><strong>Syntax:</strong> <code>AVERAGE(&lt;column>)</code></p>
+                    <p><strong>Example:</strong> Average unit price of products sold.</p>
+                    <pre><code>Average Unit Price Sold = AVERAGE(Sales[UnitPrice])</code></pre>
+                    <p><strong>Explanation:</strong> Returns the average value of 'UnitPrice' from the 'Sales' table. Useful for understanding typical selling prices.</p>
+                </article>
+
+                <article>
+                    <h4>COUNT() & COUNTA() & COUNTROWS()</h4>
+                    <p><strong>Purpose:</strong>
+                        <ul>
+                            <li><code>COUNT()</code>: Counts numbers in a column.</li>
+                            <li><code>COUNTA()</code>: Counts non-blank values in a column (numbers, text, dates).</li>
+                            <li><code>COUNTROWS()</code>: Counts the number of rows in a table (or a table expression).</li>
+                        </ul>
+                    </p>
+                    <p><strong>Syntax:</strong> <code>COUNT(&lt;column>)</code>, <code>COUNTA(&lt;column>)</code>, <code>COUNTROWS(&lt;table>)</code></p>
+                    <p><strong>Example (Count of Orders):</strong></p>
+                    <pre><code>Number of Orders = COUNTROWS(Sales)</code></pre>
+                    <p><strong>Explanation:</strong> Counts the total number of rows in the 'Sales' table, where each row represents an order line item. This is generally preferred over `COUNT` for counting occurrences.</p>
+                </article>
+
+                <article>
+                    <h4>DISTINCTCOUNT()</h4>
+                    <p><strong>Purpose:</strong> Counts the number of distinct (unique) values in a column.</p>
+                    <p><strong>Syntax:</strong> <code>DISTINCTCOUNT(&lt;column>)</code></p>
+                    <p><strong>Example:</strong> Counting the number of unique customers.</p>
+                    <pre><code>Unique Customers = DISTINCTCOUNT(Customers[CustomerID])</code></pre>
+                    <p><strong>Explanation:</strong> Essential for understanding customer base size, distinct products sold, etc.</p>
+                </article>
+            </section>
+
+            <section id="logical-functions">
+                <h3>2. Logical Functions</h3>
+                <p>Functions that return a boolean (TRUE/FALSE) or a value based on a condition.</p>
+
+                <article>
+                    <h4>IF()</h4>
+                    <p><strong>Purpose:</strong> Checks a condition, and returns one value when TRUE, and another when FALSE.</p>
+                    <p><strong>Syntax:</strong> <code>IF(&lt;logical_test>, &lt;value_if_true>, &lt;value_if_false>)</code></p>
+                    <p><strong>Example:</strong> Categorizing sales performance.</p>
+                    <pre><code>Sales Performance = IF([Total Sales] > 500000, "High Performer", "Low Performer")</code></pre>
+                    <p><strong>Explanation:</strong> This measure categorizes the total sales based on a threshold. It's evaluated in the current filter context.</p>
+                </article>
+
+                <article>
+                    <h4>SWITCH()</h4>
+                    <p><strong>Purpose:</strong> Evaluates an expression against a list of values and returns the result expression corresponding to the first matching value. More efficient than nested IFs.</p>
+                    <p><strong>Syntax:</strong> <code>SWITCH(&lt;expression>, &lt;value1>, &lt;result1>, [&lt;value2>, &lt;result2>...], [&lt;else_value>])</code><br>
+                    Or <code>SWITCH(TRUE(), &lt;condition1>, &lt;result1>, [&lt;condition2>, &lt;result2>...], [&lt;else_value>])</code> for multiple conditions.</p>
+                    <p><strong>Example:</strong> Product size classification.</p>
+                    <pre><code>Product Size = SWITCH(TRUE(),
+    Products[Weight] < 1, "Small",
+    Products[Weight] < 10, "Medium",
+    Products[Weight] >= 10, "Large",
+    "N/A" // Default value if none match
+)</code></pre>
+                    <p><strong>Explanation:</strong> This calculated column assigns a size category to each product based on its weight. The `TRUE()` syntax allows for multiple, sequential conditions.</p>
+                </article>
+            </section>
+
+            <section id="text-functions">
+                <h3>3. Text Functions</h3>
+                <p>Functions for manipulating text strings.</p>
+                <article>
+                    <h4>FORMAT()</h4>
+                    <p><strong>Purpose:</strong> Formats a value into a text string with the specified format. Useful for custom number/date formats.</p>
+                    <p><strong>Syntax:</strong> <code>FORMAT(&lt;value>, &lt;format_string>)</code></p>
+                    <p><strong>Example:</strong> Displaying sales as currency.</p>
+                    <pre><code>Formatted Sales = FORMAT([Total Sales], "$#,##0.00")</code></pre>
+                    <p><strong>Explanation:</strong> This converts the `[Total Sales]` measure into a text string formatted as a currency with two decimal places and comma separators.</p>
+                </article>
+            </section>
+
+            <section id="date-time-functions">
+                <h3>4. Date & Time Functions and Time Intelligence</h3>
+                <p>Functions for working with date/time values and performing time-based calculations. **A properly marked date table is crucial for time intelligence functions.**</p>
+
+                <article>
+                    <h4>Basic Date Functions (YEAR, MONTH, DAY, TODAY, NOW)</h4>
+                    <p><strong>Purpose:</strong> Extract parts of a date, or get current date/time.</p>
+                    <p><strong>Example (Calculated Column):</strong> Extracting the year from an order date.</p>
+                    <pre><code>Order Year = YEAR(Sales[OrderDate])</code></pre>
+                </article>
+
+                <article>
+                    <h4>TOTALYTD(), TOTALMTD(), TOTALQTD()</h4>
+                    <p><strong>Purpose:</strong> Calculate a year-to-date, month-to-date, or quarter-to-date total, respectively.</p>
+                    <p><strong>Syntax:</strong> <code>TOTALYTD(&lt;expression>, &lt;dates_column>[, &lt;filter>][, &lt;year_end_date>])</code></p>
+                    <p><strong>Example:</strong> Year-to-Date Sales.</p>
+                    <pre><code>Sales YTD = TOTALYTD([Total Sales], 'Date'[Date])</code></pre>
+                    <p><strong>Explanation:</strong> Sums `[Total Sales]` from the beginning of the year up to the last visible date in the current filter context.</p>
+                </article>
+
+                <article>
+                    <h4>SAMEPERIODLASTYEAR()</h4>
+                    <p><strong>Purpose:</strong> Shifts the date context to the same period in the previous year.</p>
+                    <p><strong>Syntax:</strong> <code>SAMEPERIODLASTYEAR(&lt;dates_column>)</code></p>
+                    <p><strong>Example:</strong> Sales for the same period last year.</p>
+                    <pre><code>Sales LY = CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date]))</code></pre>
+                    <p><strong>Explanation:</strong> Calculates `[Total Sales]` for the identical period of time (e.g., if filtered for Jan-Mar 2024, it calculates for Jan-Mar 2023).</p>
+                </article>
+
+                <article>
+                    <h4>DATEADD()</h4>
+                    <p><strong>Purpose:</strong> Returns a table that contains a column of dates, shifted forward or backward in time by the specified number of intervals.</p>
+                    <p><strong>Syntax:</strong> <code>DATEADD(&lt;dates>, &lt;number_of_intervals>, &lt;interval>)</code></p>
+                    <p><strong>Example:</strong> Sales from the previous month.</p>
+                    <pre><code>Sales Previous Month = CALCULATE([Total Sales], DATEADD('Date'[Date], -1, MONTH))</code></pre>
+                    <p><strong>Explanation:</strong> This measure shifts the filter context back by one month and calculates `[Total Sales]` for that shifted period.</p>
+                </article>
+            </section>
+
+            <section id="filter-functions">
+                <h3>5. Filter Functions</h3>
+                <p>These functions are critical for manipulating the filter context in your DAX expressions. `CALCULATE` is the cornerstone.</p>
+
+                <article>
+                    <h4>CALCULATE()</h4>
+                    <p><strong>Purpose:</strong> Evaluates an expression in a context modified by filters. It's the most powerful and frequently used DAX function.</p>
+                    <p><strong>Syntax:</strong> <code>CALCULATE(&lt;expression>, &lt;filter1> [, &lt;filter2>...])</code></p>
+                    <p><strong>Example 1 (Adding a Filter):</strong> Calculate sales for a specific product category.</p>
+                    <pre><code>Sales of Electronics = CALCULATE(
+    [Total Sales],
+    Products[Category] = "Electronics"
+)</code></pre>
+                    <p><strong>Explanation:</strong> This measure overrides or adds a filter to the current context, forcing the calculation of `[Total Sales]` only for products where the 'Category' is "Electronics".</p>
+
+                    <p><strong>Example 2 (Removing Filters with ALL):</strong> Calculate total sales irrespective of product filters.</p>
+                    <pre><code>Total Sales All Products = CALCULATE(
+    [Total Sales],
+    ALL(Products) // Removes all filters from the entire Products table
+)</code></pre>
+                    <p><strong>Explanation:</strong> Useful for "percentage of total" calculations. If you put `[Total Sales]` next to `[Total Sales All Products]` and filter by category, the first will change, but the second will remain constant.</p>
+
+                    <p><strong>Example 3 (Keeping Filters with KEEPFILTERS):</strong></p>
+                    <pre><code>Sales for Current Filtered Category Only = CALCULATE(
+    [Total Sales],
+    KEEPFILTERS(Products[Category] = "Clothing") // If report is filtered by "Footwear", it will only show "Clothing" sales within "Footwear" which is 0. If no filter, it shows clothing.
+)</code></pre>
+                    <p><strong>Explanation:</strong> `KEEPFILTERS` interacts with existing filters by retaining them and adding the new filter. Without `KEEPFILTERS`, a new filter context from `CALCULATE` would replace conflicting filters.</p>
+                </article>
+
+                <article>
+                    <h4>FILTER()</h4>
+                    <p><strong>Purpose:</strong> Returns a table filtered by a boolean expression. Often used as a table argument within other functions (especially `CALCULATE` or iterator functions).</p>
+                    <p><strong>Syntax:</strong> <code>FILTER(&lt;table>, &lt;filter_expression>)</code></p>
+                    <p><strong>Example:</strong> Sum of sales for high-value customers (customers with total sales > $1000).</p>
+                    <pre><code>High Value Customer Sales =
+CALCULATE(
+    [Total Sales],
+    FILTER(
+        Customers,
+        CALCULATE([Total Sales], Customers) > 1000 // Sub-calculate sales per customer
+    )
+)</code></pre>
+                    <p><strong>Explanation:</strong> This formula first filters the `Customers` table to include only those customers whose `[Total Sales]` (when evaluated for that specific customer) exceed 1000. Then, it calculates the `[Total Sales]` for that filtered set of customers. This demonstrates `FILTER` creating a table expression that `CALCULATE` then uses.</p>
+                </article>
+            </section>
+
+            <section id="relationship-functions">
+                <h3>6. Relationship Functions</h3>
+                <p>Functions that allow you to navigate or utilize relationships in your data model.</p>
+
+                <article>
+                    <h4>RELATED()</h4>
+                    <p><strong>Purpose:</strong> Retrieves a value from a column in another table on the 'one' side of a one-to-many relationship, typically used in a calculated column.</p>
+                    <p><strong>Syntax:</strong> <code>RELATED(&lt;column>)</code></p>
+                    <p><strong>Example (Calculated Column in Sales Table):</strong> Get the Product Category name into the Sales table.</p>
+                    <pre><code>Product Category = RELATED('Product'[CategoryName])</code></pre>
+                    <p><strong>Explanation:</strong> For each row in the 'Sales' table, this looks up the related 'Product' table based on the relationship and fetches the 'CategoryName' for that product. Requires an active relationship.</p>
+                </article>
+
+                <article>
+                    <h4>RELATEDTABLE()</h4>
+                    <p><strong>Purpose:</strong> Returns a table that contains all rows from the 'many' side of a relationship that are related to the current row on the 'one' side. Useful within iterator functions or `CALCULATE` to filter a related table.</p>
+                    <p><strong>Syntax:</strong> <code>RELATEDTABLE(&lt;table>)</code></p>
+                    <p><strong>Example (Calculated Column in Product Table):</strong> Count how many sales orders each product has.</p>
+                    <pre><code>Number of Sales Orders = COUNTROWS(RELATEDTABLE(Sales))</code></pre>
+                    <p><strong>Explanation:</strong> For each product in the 'Product' table, `RELATEDTABLE(Sales)` returns a table containing *only* the sales rows associated with that specific product. `COUNTROWS` then counts those related sales rows.</p>
+                </article>
+
+                <article>
+                    <h4>USERELATIONSHIP()</h4>
+                    <p><strong>Purpose:</strong> Specifies an inactive relationship to be used for a specific calculation. Useful when you have multiple relationships between two tables and need to activate a specific one for a measure.</p>
+                    <p><strong>Syntax:</strong> <code>USERELATIONSHIP(&lt;column1>, &lt;column2>)</code></p>
+                    <p><strong>Example:</strong> Calculate Sales by Order Date and Sales by Ship Date (where only Order Date is active).</p>
+                    <pre><code>Sales by Ship Date = CALCULATE(
+    [Total Sales],
+    USERELATIONSHIP(Sales[ShipDate], 'Date'[Date])
+)</code></pre>
+                    <p><strong>Explanation:</strong> If 'Sales'[OrderDate] is the active relationship to 'Date'[Date], this measure temporarily activates the inactive relationship between 'Sales'[ShipDate] and 'Date'[Date] *only for this calculation*, allowing you to analyze sales based on ship date filters.</p>
+                </article>
+            </section>
+
+            <section id="table-manipulation-functions">
+                <h3>7. Table Manipulation & Variable Functions</h3>
+                <p>Functions that return tables or help structure complex DAX formulas for readability and performance.</p>
+
+                <article>
+                    <h4>VAR (Variables)</h4>
+                    <p><strong>Purpose:</strong> Defines variables to store the result of an expression. Variables improve readability, simplify complex formulas, and significantly boost performance by preventing redundant calculations.</p>
+                    <p><strong>Syntax:</strong>
+                    <pre><code>VAR &lt;variable_name> = &lt;expression>
+RETURN
+    &lt;expression_using_variable(s)></code></pre>
+                    <p><strong>Example:</strong> Calculate percentage of total sales for selected products.</p>
+                    <pre><code>% Sales of Selected Products =
+VAR CurrentSales = [Total Sales]
+VAR AllSelectedSales = CALCULATE([Total Sales], ALLSELECTED(Products))
+RETURN
+    DIVIDE(CurrentSales, AllSelectedSales, 0)
+</code></pre>
+                    <p><strong>Explanation:</strong> `CurrentSales` stores the total sales under the current filter context. `AllSelectedSales` stores the total sales for all products currently visible in the report (ignoring product-specific filters applied within the visual). Using variables prevents `[Total Sales]` from being calculated multiple times, improving efficiency.</p>
+                </article>
+
+                <article>
+                    <h4>ADDCOLUMNS()</h4>
+                    <p><strong>Purpose:</strong> Adds calculated columns to an existing or virtual table expression.</p>
+                    <p><strong>Syntax:</strong> <code>ADDCOLUMNS(&lt;table>, &lt;name1>, &lt;expression1> [, &lt;name2>, &lt;expression2>...])</code></p>
+                    <p><strong>Example (Virtual Table for Top Customers):</strong></p>
+                    <pre><code>Top 10 Customers by Sales =
+TOPN(
+    10,
+    ADDCOLUMNS(
+        SUMMARIZE(Sales, Customers[CustomerName]),
+        "Customer Sales", [Total Sales]
+    ),
+    "Customer Sales"
+)</code></pre>
+                    <p><strong>Explanation:</strong> This creates a temporary table that summarizes sales by customer name, adds a calculated column "Customer Sales" to it using the `[Total Sales]` measure for each customer, and then returns the top 10 rows from that table based on "Customer Sales".</p>
+                </article>
+
+                <article>
+                    <h4>SUMMARIZE()</h4>
+                    <p><strong>Purpose:</strong> Returns a summary table for the requested totals over a set of groups. Similar to GROUP BY in SQL.</p>
+                    <p><strong>Syntax:</strong> <code>SUMMARIZE(&lt;table>, &lt;groupBy_columnName1> [, &lt;groupBy_columnName2>...][, &lt;name1>, &lt;expression1>...])</code></p>
+                    <p><strong>Example (Sales by Category and Year):</strong></p>
+                    <pre><code>Sales By Category & Year = SUMMARIZE(
+    Sales,
+    Product[Category],
+    'Date'[Calendar Year],
+    "Total Sales Amount", [Total Sales]
+)</code></pre>
+                    <p><strong>Explanation:</strong> This creates a virtual table with 'Product Category' and 'Calendar Year' columns, and a measure `Total Sales Amount` that sums `[Total Sales]` for each unique combination of category and year.</p>
+                </article>
+            </section>
+        </section>
+
+        ---
+
+        <section id="advanced-dax">
+            <h2>Advanced DAX Concepts & Patterns</h2>
+            <p>Move beyond the basics to master complex scenarios.</p>
+
+            <h3>Context Transition Demystified</h3>
+            <p><strong>Theory:</strong> How row context gets converted into filter context. This happens implicitly when a measure is evaluated in a row context (e.g., within an iterator function or a calculated column).</p>
+            <p><strong>Example:</strong> Calculating "Sales per Customer" in a customer table. If you use `[Total Sales]` directly, it will perform context transition to calculate sales for each customer.</p>
+            <pre><code>Sales Per Customer (Calculated Column) = [Total Sales]</code></pre>
+            <p>(Here, `[Total Sales]` which is a measure, implicitly transitions the row context of the Customer table into a filter context for that specific customer).</p>
+
+            <h3>Iterator Functions (`X` functions like `SUMX`, `AVERAGEX`)</h3>
+            <p><strong>Theory:</strong> These functions iterate over each row of a specified table and perform an expression for each row, then aggregate the results. They introduce a row context for the expression.</p>
+            <p><strong>Example:</strong> Calculating 'Net Sales' considering discounts applied per line item.</p>
+            <pre><code>Net Sales = SUMX(Sales, Sales[Quantity] * Sales[UnitPrice] * (1 - Sales[Discount]))</code></pre>
+
+            <h3>DAX Patterns</h3>
+            <p>Common, reusable DAX solutions for typical business problems. Learning these patterns can significantly speed up your development.</p>
+            <ul>
+                <li><strong>Year-over-Year Growth:</strong> Compare current year's performance to last year's.</li>
+                <li><strong>Running Totals:</strong> Cumulative sums over time.</li>
+                <li><strong>New vs. Returning Customers:</strong> Identify customer segments based on their first purchase date.</li>
+                <li><strong>ABC Analysis:</strong> Categorize items (e.g., products) based on their value contribution.</li>
+                <li>... (Detailed examples for each pattern would be here) ...</li>
+            </ul>
+
+            <h3>Performance Optimization in DAX</h3>
+            <p>Tips for writing efficient DAX that performs well, especially with large datasets.</p>
+            <ul>
+                <li>**Data Model Design:** A well-designed star schema is paramount.</li>
+                <li>**Minimize Calculated Columns:** Use measures whenever possible.</li>
+                <li>**Use Variables (<code>VAR</code>):** Improve readability and avoid re-evaluating expressions.</li>
+                <li>**Avoid Bidirectional Relationships (if possible):** Manage filter propagation carefully.</li>
+                <li>**Utilize DAX Studio:** A powerful external tool for analyzing and optimizing DAX queries.</li>
+            </ul>
+        </section>
+
+        ---
+
+        <section id="powerbi-lifecycle">
+            <h2>Power BI: An End-to-End Development Guide</h2>
+            <p>DAX is a crucial part, but Power BI is a full lifecycle tool.</p>
+
+            <section id="stage1-get-data">
+                <h3>Stage 1: Get Data (Data Acquisition)</h3>
+                <p><strong>Objective:</strong> Connect to various data sources and import raw data into Power BI Desktop.</p>
+                <h4>Key Considerations:</h4>
+                <ul>
+                    <li><strong>Source Identification:</strong> Where does the required data reside? (Databases, Excel, CSV, SharePoint, Web APIs, Data Lakes, SaaS apps).</li>
+                    <li><strong>Connection Methods:</strong> DirectQuery vs. Import vs. Live Connection.
+                        <ul>
+                            <li><strong>Import:</strong> Data is loaded into Power BI's VertiPaq engine. Fast performance, but data is static until refreshed.</li>
+                            <li><strong>DirectQuery:</strong> Data remains in the source. Queries are sent to the source. Good for very large datasets or real-time data, but can be slower for complex visuals.</li>
+                            <li><strong>Live Connection:</strong> Primarily for SSAS Tabular or Azure Analysis Services. No data loaded into Power BI model, leverages existing model.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Data Volume & Performance:</strong> Choose connection method based on data size and refresh frequency needs.</li>
+                    <li><strong>Credentials & Security:</strong> Ensuring secure access to data sources.</li>
+                </ul>
+                <h4>Practical Steps in Power BI Desktop:</h4>
+                <ol>
+                    <li>Click "Get Data" from the Home tab.</li>
+                    <li>Select appropriate connector (e.g., SQL Server database, Excel workbook, Web).</li>
+                    <li>Configure connection details (server name, database, file path, URL).</li>
+                    <li>Choose tables/sheets to load.</li>
+                </ol>
+                <p><strong>Example:</strong> Connecting to an Azure SQL Database.</p>
+                <pre><code>// Power BI Desktop interface steps:
+// 1. Get Data -> Azure SQL Database
+// 2. Enter Server, Database (Optional)
+// 3. Choose Data Connectivity Mode: Import or DirectQuery
+// 4. Navigate tables and Load/Transform Data</code></pre>
+            </section>
+
+            <section id="stage2-transform-data">
+                <h3>Stage 2: Transform Data (Power Query / M Language)</h3>
+                <p><strong>Objective:</strong> Clean, reshape, and combine raw data into a clean, optimized, and ready-for-modeling format. This happens in the Power Query Editor.</p>
+                <h4>Key ETL (Extract, Transform, Load) Processes:</h4>
+                <ul>
+                    <li><strong>Data Cleansing:</strong> Handling nulls, errors, duplicates; correcting data types; removing unnecessary columns/rows.</li>
+                    <li><strong>Data Reshaping:</strong>
+                        <ul>
+                            <li>**Pivoting/Unpivoting:** Transforming rows to columns or vice-versa to achieve the correct tabular structure.</li>
+                            <li>**Merging/Appending Queries:** Combining data from different sources or tables (joins and unions).</li>
+                            <li>**Splitting/Extracting Columns:** Breaking down a single column into multiple, or extracting parts of strings.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Data Enrichment:</strong> Creating custom columns using Power Query's M language (e.g., conditional columns, date parts).</li>
+                    <li><strong>Query Folding:</strong> Ensuring Power Query operations are translated back to the source system for faster processing (critical for large datasets).</li>
+                </ul>
+                <h4>Practical Steps in Power Query Editor:</h4>
+                <ol>
+                    <li>After "Get Data", click "Transform Data" to open Power Query Editor.</li>
+                    <li>Apply various transformations using the ribbon options or by writing custom M code in the Advanced Editor.</li>
+                    <li>Review "Applied Steps" to track changes.</li>
+                    <li>"Close & Apply" to load the transformed data into the data model.</li>
+                </ol>
+                <p><strong>Example (M Language):</strong> Unpivoting month columns to a single 'Month' and 'Value' column.</p>
+                <pre><code>// Sample M Code from Power Query Advanced Editor
+let
+    Source = Csv.Document(File.Contents("C:\Data\SalesData.csv"),[Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+    #"Unpivoted Other Columns" = Table.UnpivotOtherColumns(#"Promoted Headers", {"Product", "Region"}, "Month", "Sales Value")
+in
+    #"Unpivoted Other Columns"</code></pre>
+                <p><strong>Best Practices:</strong> Keep queries simple, remove unnecessary data early, manage query dependencies.</p>
+            </section>
+
+            <section id="stage3-model-data">
+                <h3>Stage 3: Model Data (Relationships & DAX)</h3>
+                <p><strong>Objective:</strong> Build a robust, scalable, and efficient data model that supports complex analysis and reporting. This is where DAX comes into play.</p>
+                <h4>Key Modeling Tasks:</h4>
+                <ul>
+                    <li><strong>Relationship Management:</strong>
+                        <ul>
+                            <li><strong>Star Schema Design:</strong> The gold standard. Separate Fact (transactional) tables from Dimension (lookup) tables.</li>
+                            <li><strong>Creating Relationships:</strong> Connecting tables based on common keys. Understand cardinality (one-to-many, one-to-one, many-to-many) and cross-filter direction.</li>
+                            <li><strong>Active vs. Inactive Relationships:</strong> Knowing when to use `USERELATIONSHIP`.</li>
+                            <li><strong>Bidirectional Filtering:</strong> Use sparingly and with caution due to potential ambiguity and performance impact.</li>
+                        </ul>
+                    </li>
+                    <li><strong>DAX Measures & Calculated Columns:</strong> (Refer to DAX sections for details)
+                        <ul>
+                            <li>Implementing business logic, aggregations, time intelligence, and KPIs.</li>
+                            <li>Choosing between calculated columns and measures appropriately.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Data Categorization & Formatting:</strong>
+                        <ul>
+                            <li>Setting correct data types, summarization behavior.</li>
+                            <li>Applying format strings (currency, date, percentage).</li>
+                            <li>Categorizing columns (e.g., city, state, country for map visuals).</li>
+                        </ul>
+                    </li>
+                    <li><strong>Hierarchies:</strong> Creating logical drill-down paths (e.g., Year > Quarter > Month > Day for dates; Category > Subcategory > Product for products).</li>
+                    <li><strong>Row-Level Security (RLS):</strong> Defining roles and rules using DAX to restrict data access based on user.</li>
+                    <li><strong>Optimizing Model Size:</strong> Hiding unnecessary columns, removing redundant data, optimizing data types.</li>
+                </ul>
+                <p><strong>Example (DAX for RLS):</strong> Defining a role to only see data for their specific region.</p>
+                <pre><code>[Region] = LOOKUPVALUE('Users'[Region], 'Users'[Email], USERPRINCIPALNAME())</code></pre>
+                <p><strong>Best Practices:</strong> Aim for a clean star schema, hide foreign keys, and use measures over calculated columns for aggregations.</p>
+            </section>
+
+            <section id="stage4-visualize-data">
+                <h3>Stage 4: Visualize Data (Reports & Dashboards)</h3>
+                <p><strong>Objective:</strong> Create intuitive, insightful, and aesthetically pleasing reports and dashboards that effectively communicate data stories.</p>
+                <h4>Key Design Principles:</h4>
+                <ul>
+                    <li><strong>Visual Selection:</strong> Choosing the right chart type for your data and message (Bar Chart for comparison, Line Chart for trends, Pie Chart for composition of a whole, Matrix for detailed tables).</li>
+                    <li><strong>Layout & Aesthetics:</strong>
+                        <ul>
+                            <li>Clean, uncluttered design.</li>
+                            <li>Consistent color palettes (use brand colors where applicable).</li>
+                            <li>Effective use of white space.</li>
+                            <li>Clear titles, labels, and legends.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Interactivity:</strong>
+                        <ul>
+                            <li>Slicers, filters, and cross-highlighting/filtering.</li>
+                            <li>Drill-through and drill-down pages for deeper insights.</li>
+                            <li>Bookmarks for guided storytelling.</li>
+                            <li>Tooltips for additional context on visuals.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Performance:</strong> Optimize visuals to load quickly. Avoid too many visuals on one page, optimize DAX measures used by visuals.</li>
+                    <li><strong>Accessibility:</strong> Designing reports that are usable by individuals with disabilities (e.g., sufficient color contrast, logical tab order).</li>
+                </ul>
+                <p><strong>Example:</strong> Design considerations for a Sales Dashboard.</p>
+                <ul>
+                    <li>Top section: Key KPIs (Total Sales, Profit, Units Sold) using Card visuals.</li>
+                    <li>Middle section: Trend of Sales over time (Line Chart), Sales by Category (Bar Chart).</li>
+                    <li>Bottom section: Sales by Region (Map or Bar Chart), Top N Products (Table or Bar Chart).</li>
+                    <li>Left sidebar: Slicers for Date, Region, Product Category.</li>
+                </ul>
+            </section>
+
+            <section id="stage5-publish-share">
+                <h3>Stage 5: Publish & Share</h3>
+                <p><strong>Objective:</strong> Make your reports and dashboards accessible to your target audience securely.</p>
+                <h4>Deployment & Access Management:</h4>
+                <ul>
+                    <li><strong>Publish to Power BI Service:</strong> Uploading the `.pbix` file from Power BI Desktop to a workspace.</li>
+                    <li><strong>Workspaces:</strong> Collaborative environments for teams to develop and share content.</li>
+                    <li><strong>Apps:</strong> A curated collection of reports and dashboards for broad consumption, providing controlled access and versioning.</li>
+                    <li><strong>Sharing Options:</strong>
+                        <ul>
+                            <li>**Share a Report:** Direct sharing with individuals or groups (less scalable).</li>
+                            <li>**Publish to Web (Public):** For embedding in public websites (use with extreme caution as data is public).</li>
+                            <li>**Embed in SharePoint Online/Teams:** Integrate reports into other platforms.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Data Gateways:</strong>
+                        <ul>
+                            <li><strong>On-premises Data Gateway:</strong> Essential for refreshing data sources that reside within your organizational network (e.g., SQL Server database on your servers).</li>
+                            <li>Configuring and managing gateway connections.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Refresh Schedules:</strong> Setting up automatic data refresh for imported datasets (daily, hourly, etc.).</li>
+                </ul>
+                <p><strong>Example:</strong> Steps to publish a report and share via an app.</p>
+                <ol>
+                    <li>In Power BI Desktop, click "Publish" -> Select target workspace.</li>
+                    <li>In Power BI Service, navigate to the workspace.</li>
+                    <li>Click "Create app" from the workspace.</li>
+                    <li>Configure app details, content (reports/dashboards), and audience (users/groups).</li>
+                    <li>Publish the app.</li>
+                </ol>
+            </section>
+
+            <section id="stage6-monitor-maintain">
+                <h3>Stage 6: Monitor & Maintain</h3>
+                <p><strong>Objective:</strong> Ensure the ongoing performance, accuracy, and relevance of your Power BI solutions.</p>
+                <h4>Ongoing Management:</h4>
+                <ul>
+                    <li><strong>Data Refresh Monitoring:</strong> Checking refresh history for failures; troubleshooting connection issues.</li>
+                    <li><strong>Performance Monitoring:</strong> Using Power BI Service metrics, DAX Studio for query optimization, and query plans. Identifying slow reports or visuals.</li>
+                    <li><strong>User Feedback & Iteration:</strong> Continuously gathering feedback from users to identify new requirements or areas for improvement.</li>
+                    <li><strong>Data Governance:</strong> Ensuring data quality, consistency, and adherence to organizational policies.</li>
+                    <li><strong>Security Audits:</strong> Regularly reviewing access permissions and RLS implementations.</li>
+                    <li><strong>Documentation:</strong> Maintaining documentation for data sources, model design, DAX measures, and report usage.</li>
+                    <li><strong>Version Control:</strong> Managing different versions of your Power BI files (`.pbix`) for collaboration and rollback.</li>
+                </ul>
+                <p><strong>Example:</strong> Handling a failed data refresh.</p>
+                <ol>
+                    <li>Check Power BI Service refresh history for error messages.</li>
+                    <li>Verify gateway connection status.</li>
+                    <li>Test source credentials.</li>
+                    <li>Inspect Power Query for recent changes that might have broken the refresh.</li>
+                </ol>
+            </section>
+        </section>
+
+        ---
+
+        <section id="project-architectures">
+            <h2>Power BI Project Architectures</h2>
+            <p>Designing Robust and Scalable Business Intelligence Solutions</p>
+            <p>A "project architecture" refers to the overall design and structure of your Power BI solution, encompassing data sources, data flow, model design, and deployment strategy. Choosing the right architecture is critical for performance, scalability, maintainability, and security.</p>
+
+            <section id="key-architectural-considerations">
+                <h3>Key Architectural Considerations:</h3>
+                <ul>
+                    <li><strong>Data Volume & Velocity:</strong> How much data? How fast does it change? (Impacts Import vs. DirectQuery).</li>
+                    <li><strong>Data Freshness Requirements:</strong> How quickly do users need to see new data? (Real-time vs. daily/hourly refresh).</li>
+                    <li><strong>Data Source Complexity:</strong> Number and types of source systems.</li>
+                    <li><strong>User Count & Concurrency:</strong> How many users will access reports simultaneously?</li>
+                    <li><strong>Security & Compliance:</strong> Data access restrictions, RLS, data residency.</li>
+                    <li><strong>Skill Sets:</strong> Availability of M, DAX, SQL, Azure engineers.</li>
+                    <li><strong>Budget:</strong> Cloud services, premium capacities.</li>
+                    <li><strong>Governance:</strong> How will the solution be managed and controlled?</li>
+                </ul>
+            </section>
+
+            <section id="architecture-pattern1-simple-import">
+                <h3>Architecture Pattern 1: Simple Import Model (Small to Medium Scale)</h3>
+                <img src="images/simple_import_architecture.png" alt="Simple Import Architecture Diagram" style="max-width:100%; height:auto; display:block; margin: 20px 0;">
+                <p><strong>Description:</strong> This is the most common starting point for many Power BI solutions. Data from various sources is imported directly into the Power BI Desktop model.</p>
+                <h4>Components:</h4>
+                <ul>
+                    <li><strong>Data Sources:</strong> Excel files, CSVs, small databases (SQL Server, SharePoint lists).</li>
+                    <li><strong>Power BI Desktop:</strong> Performs data transformation (Power Query), data modeling (relationships, DAX), and report creation.</li>
+                    <li><strong>Power BI Service:</strong> Hosts the published report, dashboards, and schedules dataset refreshes (via On-premises Data Gateway if sources are on-prem).</li>
+                </ul>
+                <h4>Pros:</h4>
+                <ul>
+                    <li><strong>Fast Performance:</strong> Data is in-memory in VertiPaq engine.</li>
+                    <li><strong>Full DAX Capabilities:</strong> All DAX functions are available.</li>
+                    <li><strong>Easy to Get Started:</strong> Low complexity.</li>
+                </ul>
+                <h4>Cons:</h4>
+                <ul>
+                    <li><strong>Data Staleness:</strong> Data is only as fresh as the last refresh.</li>
+                    <li><strong>Scalability Limits:</strong> Limited by Power BI Premium capacity for dataset size (up to 400 GB for P3, but practically smaller for single files) and refresh frequency.</li>
+                    <li><strong>Data Duplication:</strong> Data is copied into the Power BI model.</li>
+                </ul>
+                <h4>Typical Use Case:</h4>
+                <p>Departmental reports, proof-of-concepts, analysis of static or infrequently updated datasets (e.g., monthly sales reports, small HR dashboards).</p>
+            </section>
+
+            <section id="architecture-pattern2-directquery">
+                <h3>Architecture Pattern 2: DirectQuery (Large Data, Real-time Needs)</h3>
+                <img src="images/directquery_architecture.png" alt="DirectQuery Architecture Diagram" style="max-width:100%; height:auto; display:block; margin: 20px 0;">
+                <p><strong>Description:</strong> No data is imported into Power BI. Power BI sends queries directly to the source database whenever a visual is interacted with or refreshed.</p>
+                <h4>Components:</h4>
+                <ul>
+                    <li><strong>Data Sources:</strong> High-performing analytical databases (SQL Data Warehouse/Synapse, Azure SQL Database, Snowflake, Google BigQuery, SAP BW).</li>
+                    <li><strong>Power BI Desktop:</strong> Connects in DirectQuery mode; still defines relationships and DAX measures (with some limitations).</li>
+                    <li><strong>Power BI Service:</strong> Serves queries directly to the source via gateway (if on-prem).</li>
+                </ul>
+                <h4>Pros:</h4>
+                <ul>
+                    <li><strong>Real-time Data:</strong> Always reflects the latest data in the source.</li>
+                    <li><strong>Handles Large Datasets:</strong> No data size limits imposed by Power BI capacity (beyond source limits).</li>
+                    <li><strong>Source Security:</strong> Leverages source database security.</li>
+                </ul>
+                <h4>Cons:</h4>
+                <ul>
+                    <li><strong>Performance:</strong> Can be slower due to round-trips to the source. Complex queries might lead to poor user experience.</li>
+                    <li><strong>DAX Limitations:</strong> Some DAX functions and Power Query transformations are not supported.</li>
+                    <li><strong>Source Load:</strong> Can put significant load on the source database.</li>
+                </ul>
+                <h4>Typical Use Case:</h4>
+                <p>Operational dashboards, financial reporting on very large datasets where data freshness is paramount and source database is optimized for analytics (e.g., data warehouse).</p>
+            </section>
+
+            <section id="architecture-pattern3-composite-model">
+                <h3>Architecture Pattern 3: Composite Model (Hybrid Approach)</h3>
+                <img src="images/composite_model_architecture.png" alt="Composite Model Architecture Diagram" style="max-width:100%; height:auto; display:block; margin: 20px 0;">
+                <p><strong>Description:</strong> Combines Import and DirectQuery tables within a single Power BI model, offering the best of both worlds for specific scenarios.</p>
+                <h4>Components:</h4>
+                <ul>
+                    <li><strong>Imported Tables:</strong> Smaller, static dimension tables (e.g., Dates, Products, Geography).</li>
+                    <li><strong>DirectQuery Tables:</strong> Large, frequently updated fact tables (e.g., Sales Transactions, IoT sensor data).</li>
+                    <li><strong>Power BI Desktop/Service:</strong> Manages queries to both in-memory and external sources.</li>
+                </ul>
+                <h4>Pros:</h4>
+                <ul>
+                    <li><strong>Optimized Performance:</strong> Import tables provide fast lookups.</li>
+                    <li><strong>Data Freshness:</strong> DirectQuery tables provide real-time data for critical facts.</li>
+                    <li><strong>Flexibility:</strong> Design data models that best fit specific data needs.</li>
+                </ul>
+                <h4>Cons:</h4>
+                <ul>
+                    <li><strong>Increased Complexity:</strong> More challenging to design and manage relationships between different modes.</li>
+                    <li><strong>Some DAX/Query Limitations:</strong> Still subject to some DirectQuery limitations when mixing modes.</li>
+                    <li><strong>Potential Ambiguity:</strong> Careful modeling required to avoid confusing query paths.</li>
+                </ul>
+                <h4>Typical Use Case:</h4>
+                <p>Scenarios where dimensions are relatively static but facts are massive and require real-time updates (e.g., retail analytics with daily sales transactions but stable product catalog).</p>
+            </section>
+
+            <section id="architecture-pattern4-dataflows">
+                <h3>Architecture Pattern 4: Leveraging Dataflows (ETL in the Cloud)</h3>
+                <img src="images/dataflow_architecture.png" alt="Dataflow Architecture Diagram" style="max-width:100%; height:auto; display:block; margin: 20px 0;">
+                <p><strong>Description:</strong> Dataflows are a cloud-based, self-service ETL tool within Power BI Service (or Power Apps). They allow you to centralize and reuse your Power Query transformations.</p>
+                <h4>Components:</h4>
+                <ul>
+                    <li><strong>Data Sources:</strong> Various.</li>
+                    <li><strong>Power BI Dataflow:</strong> Defines Power Query transformations in a cloud-based environment. Outputs data to Azure Data Lake Storage Gen2 (managed by Power BI).</li>
+                    <li><strong>Power BI Desktop:</strong> Connects to the dataflow as a source, imports the prepared data.</li>
+                    <li><strong>Power BI Service:</strong> Manages dataflow refresh schedules.</li>
+                </ul>
+                <h4>Pros:</h4>
+                <ul>
+                    <li><strong>Reusability:</strong> Cleaned data can be used by multiple datasets and reports.</li>
+                    <li><strong>Reduced Redundancy:</strong> Avoids duplicating ETL logic in every `.pbix` file.</li>
+                    <li><strong>Decoupling ETL:</strong> Separates data preparation from report development.</li>
+                    <li><strong>Scalability:</strong> Leverage Power BI Premium for large-scale dataflows.</li>
+                </ul>
+                <h4>Cons:</h4>
+                <ul>
+                    <li><strong>Premium Requirement:</strong> Some advanced dataflow features require Power BI Premium.</li>
+                    <li><strong>Learning Curve:</strong> Understanding dataflow concepts.</li>
+                </ul>
+                <h4>Typical Use Case:</h4>
+                <p>Centralizing data preparation for multiple reports, enabling self-service BI for business users on pre-cleaned data, large organizations with many Power BI developers.</p>
+            </section>
+
+            <section id="architecture-pattern5-enterprise-data-warehouse">
+                <h3>Architecture Pattern 5: Enterprise Data Warehouse/Lakehouse (Robust & Scalable)</h3>
+                <img src="images/data_warehouse_architecture.png" alt="Enterprise Data Warehouse Architecture Diagram" style="max-width:100%; height:auto; display:block; margin: 20px 0;">
+                <p><strong>Description:</strong> For large, complex enterprises, Power BI often sits on top of a well-structured data warehouse or a modern data lakehouse solution (e.g., Azure Synapse Analytics, Databricks).</p>
+                <h4>Components:</h4>
+                <ul>
+                    <li><strong>Operational Data Sources:</strong> ERPs, CRMs, transactional databases.</li>
+                    <li><strong>ETL/ELT Pipeline:</strong> Tools like Azure Data Factory, SSIS, Spark jobs to extract, transform, and load data into the warehouse/lakehouse.</li>
+                    <li><strong>Data Warehouse/Lakehouse:</strong> Optimized for analytical queries (e.g., Azure Synapse, Databricks, Snowflake, Google BigQuery). Often uses a star/snowflake schema.</li>
+                    <li><strong>Azure Analysis Services (AAS) / Power BI Premium Per User/Capacity Semantic Model:</strong> An optional intermediate layer to host highly optimized semantic models (using Tabular models). Provides extreme performance, scalability, and security for large models.</li>
+                    <li><strong>Power BI Desktop/Service:</strong> Connects to the data warehouse/lakehouse (DirectQuery or Import) or to AAS/Premium semantic model (Live Connection).</li>
+                </ul>
+                <h4>Pros:</h4>
+                <ul>
+                    <li><strong>Extreme Scalability & Performance:</strong> Built for large data volumes and complex analytics.</li>
+                    <li><strong>Centralized Truth:</strong> Single source of truth for organizational data.</li>
+                    <li><strong>Robust Security & Governance:</strong> Comprehensive security layers at each stage.</li>
+                    <li><strong>Advanced Analytics:</strong> Can integrate with machine learning, data science tools.</li>
+                </ul>
+                <h4>Cons:</h4>
+                <ul>
+                    <li><strong>High Cost:</strong> Significant investment in infrastructure and specialized personnel.</li>
+                    <li><strong>Complex Implementation:</strong> Requires deep expertise in data engineering.</li>
+                    <li><strong>Longer Development Cycles:</strong> Initial setup can be time-consuming.</li>
+                </ul>
+                <h4>Typical Use Case:</h4>
+                <p>Large enterprises with vast amounts of data, complex analytical needs, strict governance requirements, and existing data infrastructure investments. Ideal when Power BI is one of many BI tools accessing a central data platform.</p>
+            </section>
+
+            <h3>Choosing the Right Architecture</h3>
+            <p>The best architecture depends entirely on your specific business requirements, data characteristics, budget, and existing infrastructure. Often, organizations start simple and evolve their architecture as their needs grow and data complexity increases.</p>
+            <p>Consider the trade-offs between data freshness, performance, cost, and development complexity when making your decision.</p>
+        </section>
+
+        ---
+
+        <section id="updates-news">
+            <h2>Power BI Updates & News</h2>
+            <p>Stay Current with the Latest Features and Announcements</p>
+
+            <p>Power BI is constantly evolving, with monthly updates bringing new features, improvements, and bug fixes. This section provides a summary of key updates, focusing on how they impact DAX, data modeling, and overall project development.</p>
+
+            <section id="latest-update">
+                <h3>July 2025 Update Highlights</h3>
+                <p><strong>Release Date:</strong> July 8, 2025</p>
+                <h4>Key Features:</h4>
+                <ul>
+                    <li>
+                        <h4>Enhanced Visual Calculations (Public Preview Improvements)</h4>
+                        <p>Further refinements to the visual calculations feature. Now supports more complex aggregations directly within visuals without needing separate measures. Improved performance for large datasets.</p>
+                        <p><strong>Impact on DAX:</strong> Reduces the need for some explicit DAX measures for simple visual-level calculations, but understanding DAX context remains crucial for advanced scenarios and sharing logic across multiple visuals/reports.</p>
+                        <p><a href="https://powerbi.microsoft.com/en-us/blog/power-bi-july-2025-update-visual-calculations-improvements/" target="_blank">Read more on the official Power BI blog</a></p>
+                    </li>
+                    <li>
+                        <h4>Fabric Integration Enhancements</h4>
+                        <p>Deeper integration with Microsoft Fabric capabilities. Improved connectivity to OneLake data, allowing smoother transition from data engineering in Fabric to reporting in Power BI.</p>
+                        <p><strong>Impact on Project Architecture:</strong> Reinforces the Lakehouse pattern. Encourages leveraging Fabric for data preparation and storage, with Power BI connecting to robust semantic models.</p>
+                    </li>
+                    <li>
+                        <h4>New Connector: [Specific new connector, e.g., "Microsoft Dynamics 365 Sales Insights"]</h4>
+                        <p>A new native connector for streamlined access to [brief description of data source].</p>
+                        <p><strong>Impact on Get Data Stage:</strong> Simplifies data acquisition for specific business applications.</p>
+                    </li>
+                </ul>
+                <h3>Other Improvements & Bug Fixes:</h3>
+                <ul>
+                    <li>Improved query performance for DirectQuery models with complex joins.</li>
+                    <li>Accessibility enhancements for report consumers.</li>
+                    <li>Minor bug fixes related to [mention a common bug, e.g., "date hierarchy auto-generation"].</li>
+                </ul>
+            </section>
+
+            <section id="archive-updates">
+                <h2>Previous Updates Archive</h2>
+                <p>Browse through past Power BI updates and their impact.</p>
+
+                <article class="update-summary">
+                    <h3>June 2025 Update Summary</h3>
+                    <p><strong>Release Date:</strong> June 10, 2025</p>
+                    <ul>
+                        <li>**DAX Function:** Introduction of <code>WINDOW()</code> and <code>OFFSET()</code> for native windowing calculations.</li>
+                        <li>**Modeling Feature:** Enhanced aggregation options for DirectQuery.</li>
+                        <li><a href="https://powerbi.microsoft.com/en-us/blog/power-bi-june-2025-update-summary/" target="_blank">View full details</a></li>
+                    </ul>
+                </article>
+
+                <article class="update-summary">
+                    <h3>May 2025 Update Summary</h3>
+                    <p><strong>Release Date:</strong> May 14, 2025</p>
+                    <ul>
+                        <li>**Reporting Feature:** New "Small Multiples" visual layout option.</li>
+                        <li>**Service Feature:** Enhanced deployment pipelines.</li>
+                        <li><a href="https://powerbi.microsoft.com/en-us/blog/power-bi-may-2025-update-summary/" target="_blank">View full details</a></li>
+                    </ul>
+                </article>
+
+                </section>
+
+            <section id="stay-informed">
+                <h2>How to Stay Informed</h2>
+                <p>The Power BI team releases updates monthly. We highly recommend:</p>
+                <ul>
+                    <li>Subscribing to the <a href="https://powerbi.microsoft.com/en-us/blog/" target="_blank">Official Power BI Blog</a>.</li>
+                    <li>Following the <a href="https://community.powerbi.com/" target="_blank">Power BI Community Forums</a>.</li>
+                    <li>Watching "Guy in a Cube" on YouTube for monthly summary videos.</li>
+                </ul>
+            </section>
+        </section>
+
+        ---
+
+        <section id="resources">
+            <h2>Recommended Learning Resources</h2>
+            <p>To further deepen your knowledge, explore these excellent resources:</p>
+            <ul>
+                <li>**Microsoft Learn:** The official documentation and guided learning paths for Power BI and DAX.
+                    <ul>
+                        <li><a href="https://learn.microsoft.com/en-us/dax/" target="_blank">DAX Reference</a></li>
+                        <li><a href="https://learn.microsoft.com/en-us/power-bi/transform-model/desktop-quickstart-learn-dax-basics" target="_blank">Learn DAX Basics in Power BI Desktop</a></li>
+                    </ul>
+                </li>
+                <li>**SQLBI:** The definitive source for advanced DAX and data modeling by Marco Russo and Alberto Ferrari.
+                    <ul>
+                        <li><a href="https://www.sqlbi.com/" target="_blank">SQLBI Website</a></li>
+                        <li>Consider their books like "DAX Patterns" and "The Definitive Guide to DAX".</li>
+                    </ul>
+                </li>
+                <li>**DAX Guide:** A community-driven reference for DAX functions with great examples.
+                    <ul>
+                        <li><a href="https://dax.guide/" target="_blank">DAX Guide Website</a></li>
+                    </ul>
+                </li>
+                <li>**Guy in a Cube:** Excellent YouTube channel for Power BI tips, tricks, and updates.
+                    <ul>
+                        <li><a href="https://www.youtube.com/user/GuyInACube" target="_blank">Guy in a Cube YouTube</a></li>
+                    </ul>
+                </li>
+                <li>**RADACAD:** Articles and tutorials on Power BI, DAX, and M.
+                    <ul>
+                        <li><a href="https://radacad.com/" target="_blank">RADACAD Website</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <h3>Recommended Books:</h3>
+            <ul>
+                <li>**"The Definitive Guide to DAX"** by Marco Russo and Alberto Ferrari</li>
+                <li>**"DAX Patterns"** by Marco Russo and Alberto Ferrari</li>
+                <li>**"Power Query for Power BI and Excel"** by Chris Webb</li>
+            </ul>
+            <h3>Online Courses & Platforms:</h3>
+            <ul>
+                <li>**Pluralsight:** Comprehensive courses on Power BI, DAX, and data warehousing.</li>
+                <li>**Udemy/Coursera/edX:** Various courses from beginner to advanced levels.</li>
+            </ul>
+            <h3>Community & Forums:</h3>
+            <ul>
+                <li><a href="https://community.powerbi.com/" target="_blank">Power BI Community</a></li>
+                <li><a href="https://stackoverflow.com/tags/powerbi" target="_blank">Stack Overflow (Power BI tag)</a></li>
+                <li><a href="https://www.reddit.com/r/PowerBI/" target="_blank">r/PowerBI on Reddit</a></li>
+            </ul>
+            <h3>Essential Tools:</h3>
+            <ul>
+                <li>**DAX Studio:** An indispensable external tool for writing, executing, and analyzing DAX queries.</li>
+                <li>**Tabular Editor:** A powerful editor for Power BI and Analysis Services Tabular models.</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Power BI DAX & Project Architectures Guide. All rights reserved.</p>
+            <p>Disclaimer: This content is for educational purposes. Always refer to official Microsoft documentation for the latest information.</p>
+        </div>
+    </footer>
+</body>
+</html>
