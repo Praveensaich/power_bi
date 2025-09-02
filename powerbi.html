@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power BI Project: End-to-End Migration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 2rem;
+        }
+        .section-title {
+            color: #1e40af;
+            font-weight: 700;
+            border-bottom: 2px solid #d1d5db;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        .role-card {
+            background-color: #e0f2fe;
+            border-left: 4px solid #3b82f6;
+        }
+        ul.list-disc li, ol.list-decimal li {
+            margin-bottom: 0.5rem;
+        }
+        pre {
+            background-color: #f9fafb;
+            border-left: 3px solid #6b7280;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        .answer {
+            font-weight: 600;
+            color: #374151;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container bg-white p-8 rounded-xl shadow-lg mt-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-extrabold text-blue-900 leading-tight">End-to-End Power BI Project Documentation</h1>
+            <p class="mt-2 text-lg text-gray-600">A detailed guide on a data migration and reporting project using Microsoft Fabric and Power BI.</p>
+        </header>
+
+        <main>
+            <!-- Project Overview Section -->
+            <section class="mb-8">
+                <h2 class="section-title text-2xl">1. Project Overview</h2>
+                <div class="card">
+                    <p class="text-gray-700 leading-relaxed">
+                        This project is a critical **data migration and business intelligence initiative** for a large-scale mining company. The core business challenge was the fragmentation of data sources and the lack of a centralized, real-time reporting system. Legacy reports were developed using a mix of disparate files (**Excel, CSV, SQL Server**) and manual data exports from SAP using various **T-codes**. This process was time-consuming, prone to error, and led to inconsistent reporting.
+                    </p>
+                    <p class="mt-4 text-gray-700 leading-relaxed">
+                        The solution involves a complete migration to **Microsoft Fabric**. Data from various **SAP modules**, including **SAP PM (Plant Maintenance)** and **SAP FICO (Financial Accounting and Controlling)**, is now being replicated from the source **Oracle database** directly into the **Fabric Lakehouse**. This establishes a single source of truth and enables the creation of a modern, efficient, and scalable reporting solution. The project is managed across three distinct environments: **Dev**, **Pre-prod**, and **Prod**, ensuring a robust and secure development and deployment pipeline.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Roles and Responsibilities Section -->
+            <section class="mb-8">
+                <h2 class="section-title text-2xl">2. Roles and Responsibilities</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="card role-card">
+                        <h3 class="font-bold text-lg text-blue-800">Power BI Developer (My Role)</h3>
+                        <p class="mt-2 text-gray-700">
+                            I am responsible for the entire report development lifecycle. My key tasks include:
+                        </p>
+                        <ul class="list-disc list-inside mt-2 text-gray-600">
+                            <li>**Requirement Gathering:** Collaborating with business stakeholders to translate raw requests into clear, documented data and reporting requirements.</li>
+                            <li>**Data Modeling:** Designing and implementing a robust data model within Power BI Desktop, following the Star Schema methodology.</li>
+                            <li>**ETL and Data Shaping:** Using Power Query to connect to Fabric views, clean, and transform the data.</li>
+                            <li>**DAX Development:** Creating complex DAX measures, calculated columns, and tables for advanced analysis.</li>
+                            <li>**Visual Development:** Building insightful and user-friendly dashboards and reports using a variety of visuals.</li>
+                            <li>**Deployment:** Publishing reports and semantic models to Fabric workspaces and configuring refresh schedules.</li>
+                        </ul>
+                    </div>
+                    <div class="card role-card">
+                        <h3 class="font-bold text-lg text-blue-800">Data Engineering Team</h3>
+                        <p class="mt-2 text-gray-700">
+                            This team is the foundation of the project. Their main tasks include:
+                        </p>
+                        <ul class="list-disc list-inside mt-2 text-gray-600">
+                            <li>**Data Ingestion:** Extracting data from SAP's Oracle database.</li>
+                            <li>**Data Landing:** Storing the raw data in the Fabric Lakehouse (the **Bronze layer**).</li>
+                            <li>**Pipeline Management:** Creating and maintaining the data pipelines that bring data from source to the Lakehouse.</li>
+                        </ul>
+                    </div>
+                    <div class="card role-card md:col-span-2">
+                        <h3 class="font-bold text-lg text-blue-800">Data Modeling Team</h3>
+                        <p class="mt-2 text-gray-700">
+                            This team works on the data in the Lakehouse, preparing it for consumption. They are responsible for:
+                        </p>
+                        <ul class="list-disc list-inside mt-2 text-gray-600">
+                            <li>**Data Transformation:** Cleansing and structuring data from the raw layer into a refined, high-quality format (the **Silver and Gold layers** of the Medallion Architecture).</li>
+                            <li>**View Creation:** Developing optimized views in Fabric on top of the Lakehouse data, which serve as the direct source for my Power BI semantic models.</li>
+                            <li>**Data Governance:** Ensuring data quality and consistency across all datasets.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- End-to-End Development Section -->
+            <section class="mb-8">
+                <h2 class="section-title text-2xl">3. End-to-End Report Development</h2>
+                <div class="card">
+                    <h3 class="font-bold text-xl text-blue-900 mb-2">Power BI Desktop Development</h3>
+                    <ul class="list-disc list-inside space-y-4 text-gray-700">
+                        <li>
+                            <p><strong>Power Query (Extract, Transform, Load):</strong> I connect to the finalized views in the Fabric Lakehouse, which represent the project's Gold layer.
+                            <br><strong>Harder Concepts & Specific Example:</strong>
+                            To handle SAP data, which often comes in a wide, non-normalized format, I had to use advanced Power Query techniques. For the financial reports, a single table contained cost information for various categories in different columns. I used a custom function to automate the process of unpivoting these columns and cleaning the data across multiple years.
+                            </p>
+                            <pre class="mt-2">
+let
+    Source = Lakehouse.Data,
+    #"Unpivoted Columns" = Table.UnpivotOtherColumns(Source, {"Date", "Cost Center"}, "Attribute", "Value"),
+    #"Filtered Rows" = Table.SelectRows(#"Unpivoted Columns", each not Text.StartsWith([Attribute], "Year"))
+in
+    #"Filtered Rows"
+                            </pre>
+                        </li>
+                        <li>
+                            <p><strong>Data Modeling:</strong> Following a **Star Schema** approach, I built a robust model to ensure optimal performance. The model consists of a central **Fact Table** (`FactMaintenanceCosts`) which includes key metrics like `Actual Cost`, `Budgeted Cost`, and `Diesel Consumption`. This fact table is connected to several **Dimension Tables** such as `DimDate`, `DimEquipment`, and `DimWorkOrder`. This structure allows for fast slicing and dicing of data.
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>DAX (Data Analysis Expressions):</strong> I developed a comprehensive suite of DAX measures for a variety of reports.
+                            <br><strong>Harder Concepts & Specific Examples:</strong>
+                                <ul class="list-disc list-inside ml-6 mt-2 text-gray-600">
+                                    <li><strong>Measures:</strong> I created measures for Year-over-Year analysis using time intelligence functions.
+                                        <pre class="mt-2">
+Total Maintenance Cost = SUM('FactMaintenanceCosts'[Actual Cost])
+Total Cost YoY % = DIVIDE(
+    [Total Maintenance Cost] - CALCULATE([Total Maintenance Cost], SAMEPERIODLASTYEAR('DimDate'[Date])),
+    CALCULATE([Total Maintenance Cost], SAMEPERIODLASTYEAR('DimDate'[Date]))
+)
+                                        </pre>
+                                    </li>
+                                    <li><strong>Field Parameters:</strong> For the Financial reports, I implemented a Field Parameter to allow users to dynamically switch between different financial views. This provided unprecedented flexibility and reduced the need for multiple pages.</li>
+                                    <li><strong>Calculated Tables:</strong> I used DAX to create a disconnected `What-If` parameter table that allows users to simulate the impact of a salary increase on total project costs.</li>
+                                </ul>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Visual Development and Interactivity:</strong> I designed multiple reports with a focus on usability and insight.
+                            <br><strong>Report Examples:</strong>
+                                <ul class="list-disc list-inside ml-6 mt-2 text-gray-600">
+                                    <li>**Equipment Cost Report:** A high-level dashboard featuring **KPI cards** for total cost and variance to budget. I used a **column chart** to show monthly cost trends and a **treemap** to highlight the highest-cost equipment categories.</li>
+                                    <li>**Work Order Report:** This report used a **matrix visual** to show overdue work orders by priority and a **table** with conditional formatting to quickly identify key issues.</li>
+                                    <li>**Bookmarks:** I created bookmarks to save and share specific report views, such as a filtered view showing only high-priority issues or a specific time period.</li>
+                                </ul>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Power BI Service Section -->
+            <section class="mb-8">
+                <h2 class="section-title text-2xl">4. Power BI Service and Microsoft Fabric</h2>
+                <div class="card">
+                    <p class="text-gray-700 leading-relaxed">
+                        The Power BI Service, a component of Microsoft Fabric, is the final destination for the reports.
+                    </p>
+                    <ul class="list-disc list-inside mt-4 space-y-2 text-gray-700">
+                        <li>
+                            <strong>Publishing and Workspaces:</strong> After development, I publish the reports to their respective workspaces in Fabric (`Dev`, `Pre-prod`, and `Prod`). This ensures proper segregation of data and content for testing and production use.
+                        </li>
+                        <li>
+                            <strong>Scheduling Refreshes:</strong> To maintain data freshness, I configured scheduled refreshes on the semantic models. In the `Prod` environment, I implemented **incremental refresh** to process only the latest data, significantly reducing refresh times and resource consumption.
+                        </li>
+                        <li>
+                            <strong>App Creation and Distribution:</strong> I created a Power BI App to bundle related reports into a single, navigable experience for end-users. I used **Row-Level Security (RLS)** to filter the data visible to each user based on their specific SAP roles and responsibilities.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Project Difficulties and Interview Questions Section -->
+            <section class="mb-8">
+                <h2 class="section-title text-2xl">5. Project Challenges and Interview Questions</h2>
+                <div class="card">
+                    <h3 class="font-bold text-xl text-blue-900 mb-2">Difficulties Faced in Report Building (Desktop & Service)</h3>
+                    <ul class="list-disc list-inside space-y-4 text-gray-700">
+                        <li>
+                            <p><strong>Challenge: Data from Other Reports (Desktop)</strong>
+                            <br>Integrating historical data from various legacy Excel and CSV reports with the new live data from the Lakehouse. The data was inconsistent, lacked unique identifiers, and was stored in non-standard formats.
+                            <br><span class="answer">**Solution:** Used Power Query's Merge and Append capabilities to join the datasets. I created a custom function to clean and unpivot the legacy data before combining it with the live data, ensuring consistency.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Challenge: Inconsistent Data Granularity (Desktop)</strong>
+                            <br>The new Lakehouse views had different levels of detail for cost data, with some financial records aggregated weekly and others daily. This made direct comparisons and time intelligence calculations difficult.
+                            <br><span class="answer">**Solution:** I used DAX measures with `SUMMARIZE` and `GROUPBY` functions to aggregate data to a common granularity (e.g., weekly) before performing calculations, ensuring that all data points were comparable.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Challenge: Slow Performance in Service</strong>
+                            <br>After publishing to the service, initial reports were very slow to load, especially on pages with multiple complex visuals.
+                            <br><span class="answer">**Solution:** I used the Power BI Performance Analyzer to identify inefficient visuals and DAX measures. I optimized the measures by creating variables and pre-calculating values where possible. I also implemented incremental refresh on the semantic model to reduce data refresh times.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Challenge: Row-Level Security (RLS) Implementation (Service)</strong>
+                            <br>Setting up dynamic RLS to filter data based on each user's SAP-defined roles and permissions was complex.
+                            <br><span class="answer">**Solution:** I created a DAX role in Power BI Desktop with a filter expression (`[Email] = USERNAME()`) and a corresponding security table that mapped user emails to their respective departments, cost centers, and plants. This allowed users to see only the data relevant to their role.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Challenge: Report Distribution and User Adoption (Service)</strong>
+                            <br>Ensuring all relevant stakeholders had access to the correct reports and were comfortable navigating the new Fabric environment.
+                            <br><span class="answer">**Solution:** I created a single Power BI App to act as a central hub for all reports. I conducted training sessions for end-users and provided comprehensive documentation and tutorials on how to use the app and its features.</span>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card mt-6">
+                    <h3 class="font-bold text-xl text-blue-900 mb-2">Power BI Interview Questions & Answers</h3>
+                    
+                    <h4 class="font-semibold text-lg text-blue-800 mt-4">DAX and Data Modeling Questions</h4>
+                    <ul class="list-disc list-inside mt-2 text-gray-600 space-y-3">
+                        <li>
+                            <p><strong>Q: What is the difference between a measure and a calculated column?</strong>
+                            <br><span class="answer">**A:** A **calculated column** is a new column in a table that is computed at data refresh time. It consumes memory and storage. A **measure** is a dynamic calculation that is evaluated at query time based on the filter context of a visual. Measures are more flexible and do not consume storage space.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Q: Explain the `CALCULATE` function.</strong>
+                            <br><span class="answer">**A:** `CALCULATE` is the most powerful DAX function. It changes the filter context of an expression. It allows you to modify how a calculation is performed, for example, by removing a filter with `ALL` or adding a new filter.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Q: How do you handle a many-to-many relationship?</strong>
+                            <br><span class="answer">**A:** The best practice is to use a **bridge table** or **junction table**. This intermediate table connects the two dimension tables with one-to-many relationships, which is more efficient than a direct many-to-many relationship.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Q: What is the Star Schema and why is it important?</strong>
+                            <br><span class="answer">**A:** The Star Schema is a data modeling technique where a central **fact table** (containing key metrics) is connected to multiple **dimension tables** (containing descriptive data). It is important because it simplifies the data model, improves query performance, and makes it easier for users to understand the data.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Q: When would you use a calculated table?</strong>
+                            <br><span class="answer">**A:** A calculated table is a new table created with a DAX expression. It's useful for creating a date table for time intelligence, a disconnected table for "What-If" analysis, or for creating a filtered subset of a larger table.</span>
+                            </p>
+                        </li>
+                    </ul>
+                    
+                    <h4 class="font-semibold text-lg text-blue-800 mt-4">Power Query and ETL Questions</h4>
+                    <ul class="list-disc list-inside mt-2 text-gray-600 space-y-3">
+                        <li>
+                            <p><strong>Q: What are the key stages of ETL in Power Query?</strong>
+                            <br><span class="answer">**A:** The key stages are **Extract** (connecting to a data source), **Transform** (cleaning, shaping, and combining the data), and **Load** (loading the final data into the Power BI data model).</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Q: Explain the difference between `Merge` and `Append` queries.</strong>
+                            <br><span class="answer">**A:** **Merge** is used to combine columns from two or more tables based on a common key (like a SQL join). **Append** is used to stack rows from multiple tables on top of each other, typically for data with the same schema.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Q: What is the M-code in Power Query?</strong>
+                            <br><span class="answer">**A:** M-code is the programming language behind Power Query. It's a functional, case-sensitive language used to write queries for data transformation. It can be accessed and edited in the Advanced Editor.</span>
+                            </p>
+                        </li>
+                    </ul>
+
+                    <h4 class="font-semibold text-lg text-blue-800 mt-4">Power BI Service and Deployment Questions</h4>
+                    <ul class="list-disc list-inside mt-2 text-gray-600 space-y-3">
+                        <li>
+                            <p><strong>Q: What is the difference between a Power BI Report and a Dashboard?</strong>
+                            <br><span class="answer">**A:** A **report** is a multi-page canvas showing a collection of visualizations based on a single semantic model. A **dashboard** is a single-page canvas containing visualizations (or "tiles") from one or more reports. Dashboards are used for a high-level overview.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Q: What is incremental refresh and why is it important?</strong>
+                            <br><span class="answer">**A:** Incremental refresh is a feature that allows Power BI to refresh only a subset of the data in a large semantic model, rather than the entire dataset. It is important for reducing refresh times, decreasing resource consumption, and ensuring data is up-to-date without a full reload.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Q: How do you ensure report security in the Power BI Service?</strong>
+                            <br><span class="answer">**A:** Security is managed through **Workspaces**, **App permissions**, and **Row-Level Security (RLS)**. Workspaces define who can access and edit content. App permissions control who can view the published app. RLS is used to filter data for individual users.</span>
+                            </p>
+                        </li>
+                    </ul>
+
+                    <h4 class="font-semibold text-lg text-blue-800 mt-4">Microsoft Fabric and Data Engineering Questions</h4>
+                    <ul class="list-disc list-inside mt-2 text-gray-600 space-y-3">
+                        <li>
+                            <p><strong>Q: What is the Medallion Architecture?</strong>
+                            <br><span class="answer">**A:** The Medallion Architecture is a data design pattern that organizes data into three logical layers: **Bronze** (raw, untransformed data), **Silver** (cleaned, validated, and conformed data), and **Gold** (curated, enriched, and ready-to-use data for analytics).</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Q: What is a Lakehouse in Microsoft Fabric?</strong>
+                            <br><span class="answer">**A:** A Lakehouse is a data architecture that combines the flexibility of a data lake with the structure and management features of a data warehouse. It allows you to store and manage structured and unstructured data while enabling SQL-based querying for BI tools like Power BI.</span>
+                            </p>
+                        </li>
+                        <li>
+                            <p><strong>Q: What is the difference between a data lake and a data warehouse?</strong>
+                            <br><span class="answer">**A:** A **data warehouse** stores structured data in a predefined schema for business intelligence. A **data lake** is a centralized repository that stores all types of data (structured, semi-structured, unstructured) at any scale, with the schema defined on read. The Lakehouse combines the strengths of both.</span>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-12 pt-6 border-t border-gray-300 text-gray-500 text-sm">
+            <p>&copy; 2025 Power BI Project Documentation. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
